@@ -1,6 +1,7 @@
 package artur.goz.userservice.securityConfigs;
 
-import artur.parser.parser.Service.MyUserDetailService;
+
+import artur.goz.userservice.services.MyUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -56,14 +57,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-/*    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        System.out.println("Token not found or invalid: " + bearerToken);
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        System.out.println("Token not found or invalid: " + bearerToken);
-        return null;
-    }*/
 }
 

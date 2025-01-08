@@ -1,6 +1,5 @@
-package artur.goz.userservice.securityConfigs;
+package artur.goz.userservice.models;
 
-import artur.parser.parser.models.MyUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
