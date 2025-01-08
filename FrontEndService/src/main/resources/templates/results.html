@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результати матчів</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}">
+    <link th:href="|https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rajdhani:wght@500&display=swap|" rel="stylesheet">
+    <link th:href="|https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css|" rel="stylesheet">
+</head>
+<body>
+<h1>Вибір турніру</h1>
+<form th:action="@{/match-results/filter}" method="get">
+    <label for="tournamentName">Виберіть турнір:</label>
+    <select id="tournamentName" name="tournamentName">
+        <option value="" disabled selected>Оберіть турнір</option>
+        <!-- Використовуємо Thymeleaf для отримання списку турнірів -->
+        <th:block th:each="tournament : ${tournaments}">
+            <option th:value="${tournament}" th:text="${tournament}"></option>
+        </th:block>
+    </select>
+    <button type="submit">Показати результати</button>
+</form>
+
+
+<!-- Відображення результатів матчів -->
+<div th:if="${matchResults != null}">
+    <h2 th:text="'Результати для турніру: ' + ${selectedTournament}"></h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Команда 1</th>
+            <th>Команда 2</th>
+            <th>Результат</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="result : ${matchResults}">
+            <td th:text="${result.emptyLineUps}"></td>
+            <td th:text="${result.teamWinnerName}"></td>
+            <td th:text="${result.teamLoserName}"></td>
+            <td>
+                <ul>
+                    <li th:each="hero : ${result.teamHeroesWinner}" th:text="${hero}"></li>
+                </ul>
+            </td>
+
+            <td>
+                <ul>
+                    <li th:each="hero : ${result.teamHeroesLoser}" th:text="${hero}"></li>
+                </ul>
+            </td>
+            <td th:text="${result.teamWinnerWinrate}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Повідомлення, якщо немає результатів -->
+<div th:if="${matchResults == null || matchResults.isEmpty()}">
+    <p>Результати для вибраного турніру відсутні.</p>
+</div>
+
+
+</body>
+</html>

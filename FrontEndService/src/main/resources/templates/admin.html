@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Адміністративна сторінка</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logReg.css}">
+</head>
+<body>
+<h1>Адміністративна сторінка</h1>
+
+<!-- Форма для оновлення даних -->
+<form th:action="@{/admin/update-data}" method="post">
+    <button type="submit">Оновлення даних</button>
+</form>
+
+<form id="add-tournament" th:action="@{/admin/add-tour}" th:object="${tournament}" method="post">
+    <div>
+        <label for="tournamentName">Tournament name:</label>
+        <input type="text" id="tournamentName" th:field="*{name}" required />
+    </div>
+    <div>
+        <label for="division">Division:</label>
+        <input type="text" id="division" th:field="*{division}" required />
+    </div>
+    <div>
+        <label for="tournamentUrl">Tournament Url:  (https://dltv.org/events/mesa-invitational-2024)</label>
+        <input type="text" id="tournamentUrl" name="tournamentUrl" required />
+    </div>
+    <div>
+        <button type="submit">add tournament</button>
+    </div>
+</form>
+
+<!-- Відображення результату оновлення -->
+<p th:if="${updateResult}" th:text="'Результат оновлення: ' + ${updateResult}"></p>
+</body>
+</html>

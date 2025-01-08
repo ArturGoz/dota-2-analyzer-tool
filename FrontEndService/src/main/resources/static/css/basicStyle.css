@@ -1,0 +1,320 @@
+
+.banner-left, .banner-right {
+    position: fixed;
+    width: 120px;
+    height: 100vh;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.banner-left {
+    left: 0;
+    top: 0;
+}
+
+.banner-right {
+    right: 0;
+    top: 0;
+}
+
+/* Хедер */
+header {
+    position: relative;
+    text-align: center;
+    background-color: #333;
+    padding: 10px 0;
+    color: white;
+}
+
+.log-reg-block {
+    height: 50px;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 250px;
+    gap: 20px;
+    background-color: transparent;
+}
+
+
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Основний контент */
+main {
+    margin: 0 150px; /* Залишаємо простір для банерів */
+    padding: 20px;
+    background-color: #f9f9f9;
+    height: 900px;
+}
+
+.control-section {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.control-section button {
+    padding: 10px 20px;
+}
+
+.teams-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.team-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team-block2 {
+    display: flex;
+    flex-direction: column;
+}
+.team-block2 button {
+margin: 10px;
+}
+
+.team-block img {
+    margin: 10px; /* Додає відступ між зображенням та текстом */
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.heroes-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.team-heroes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
+.hero-block {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.hero-block-sizes {
+    margin: 10px;
+    width: 80px;
+    height: 100px;
+}
+
+
+.results-section {
+    margin-top: 20px;
+}
+
+
+
+/* Футер */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    margin-top: 20px;
+}
+
+header, footer {
+    font-family: 'Orbitron', sans-serif;
+}
+
+
+main {
+    background: linear-gradient(145deg, #2a2d3f, #202231);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 15px;
+    font-family: 'Rajdhani', sans-serif;
+    color: #e0e0e0;
+}
+button {
+    background-color: #ff4757;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 5px;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 15px rgba(255, 71, 87, 0.5);
+}
+header {
+    border-bottom: 2px solid #ff4757;
+    background-color: #202231;
+    padding: 10px 0;
+    text-shadow: 0 0 5px #ff4757, 0 0 10px #ff4757;
+}
+
+.banner-header {
+    background-color: transparent;
+    color: #fff;
+    font-size: 24px;
+    text-shadow: 0 0 10px #fff, 0 0 15px #ff4757;
+}
+
+.team-block img {
+    filter: drop-shadow(0 0 10px #ff4757);
+}
+.hero-block img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #cccccc; /* Зміна кольору на нейтральний сірий */
+    margin-bottom: 5px;
+}
+
+.hero-block img:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 10px rgba(255, 71, 87, 0.8);
+}
+#radiant-winrate, #dire-winrate {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+footer {
+    background-color: #202231;
+    color: #ff4757;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.hero-stats {
+         display: flex;
+         justify-content: space-around;
+         align-items: center;
+         height: 100px;
+         width: 100%;
+         font-size: 13px;
+}
+
+.column {
+         display: flex;
+         flex-direction: column;
+         margin-left: 2px;
+         margin-right: 2px;
+}
+.row {
+         display: flex;
+         flex-direction: row;
+         justify-content: space-around;
+}
+
+.small-pic {
+    width: 32px !important;
+    height: 32px !important;
+    object-fit: cover;
+}
+
+
+
+
+.hero-block-stats {
+    width: 110px;
+    margin: 3px;
+}
+
+
+.center-image {
+     display: block;
+     margin-left: auto;
+     margin-right: auto;
+     width: 50%; /* Зменшуємо розмір до 50% від оригіналу */
+}
+
+.pos1 {
+
+}
+
+.pos2 {
+
+}
+
+.pos3 {
+
+}
+
+.pos4 {
+
+}
+
+.pos5 {
+
+}
+
+.pos6 {
+
+}
+
+.pos7 {
+
+}
+.pos8 {
+
+}
+.pos9 {
+
+}
+.pos10 {
+
+}
+
+.control-section label {
+    font-size: 25px; /* Можете вибрати потрібний вам розмір */
+}
+
+        .center-label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+
+

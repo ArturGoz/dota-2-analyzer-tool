@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title th:text="${title}">Dota 2 Draft Winrate Calculator</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}">
+    <link th:href="|https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css|" rel="stylesheet">
+<!--   <script th:src="|https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js|"></script>
+  <script th:src="@{/js/auth.js}"></script>-->
+
+</head>
+
+<body>
+<!-- Бічні банери -->
+<div class="banner-left">Банер зліва</div>
+<div class="banner-right">Банер справа</div>
+
+<!-- Header -->
+<header>
+    <div class="log-reg-block">
+        <nav>
+            <ul>
+                <li><a href="/api/register">Register</a></li>
+                <li><a href="/api/login">Login</a></li>
+                <li><a href="/api/logout">Logout</a></li>
+                <li><span th:text="${greeting}"></span></li>
+                <li>
+                    <a href="#" id="depositButton">Deposit</a>
+                    <div id="depositForm" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; padding: 15px;">
+                        <form th:action="@{/purchase/extra-requests}" method="post">
+                            <input type="hidden" name="_method" value="patch">
+                            <input type="hidden" name="number" value="250" />
+                            <button type="submit" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Buy 250 Analytics Requests</button>
+                        </form>
+                        <button type="button" id="closeForm" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; cursor: pointer;">Cancel</button>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="/parser"><i class="fas fa-gamepad"></i> Dota 2 Draft Analyses</a></li>
+            <li><a href="/match-results"><i class="fas fa-chart-line"></i> Analyses Results</a></li>
+            <li><a href="#"><i class="fas fa-info-circle"></i> How to Use</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contacts</a></li>
+        </ul>
+    </nav>
+
+</header>
+
+<!-- Основний контент -->
+<main>
+    <!-- Блок з кнопками і текстом -->
+    <section class="control-section">
+        <label>All results of dota 2 matches based on 8000+ rating/MMR</label>
+    </section>
+    <div class="align-center"><span th:text="${showWinrate}" id="showWinrate" style="font-weight: bold; color: orange;"></span></div>
+
+    <!-- Блок з командами -->
+    <section class="teams-section">
+
+        <div class="team-block">
+            <div>Team Radiant</div>
+            <div class="align-right">Winrate: <span id="radiant-winrate" style="font-weight: bold; color: orange;"></span></div>
+        </div>
+
+        <div class="team-block">
+            <div class="align-center">Empty line-ups :<span id="emptyLineUps" style="font-weight: bold; color: orange;"></span> </div>
+        </div>
+
+        <div class="team-block">
+            <div class="align-left">Winrate: <span id="dire-winrate" style="font-weight: bold; color: orange;"></span></div>
+            <div>Team Dire</div>
+        </div>
+
+    </section>
+
+
+    <!-- Блок для вибору героїв -->
+    <section class="heroes-section">
+        <div class="team-heroes">
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_1.png"  class="center-image">
+                <select class="form-control" id="comboBox1"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_2.png"  class="center-image">
+                <select class="form-control" id="comboBox2"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_3.png"  class="center-image">
+                <select class="form-control" id="comboBox3"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_4.png"  class="center-image">
+                <select class="form-control" id="comboBox4"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_5.png"  class="center-image">
+                <select class="form-control" id="comboBox5"></select>
+            </div>
+        </div>
+
+        <div class="team-heroes">
+          <div class="team-block2">
+              <button id="check-winrate">Check Winrate</button>
+             <button id="clear">Clear</button>
+          </div>
+        </div>
+
+        <div class="team-heroes">
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_1.png"  class="center-image">
+                <select class="form-control" id="comboBox6"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_2.png"  class="center-image">
+                <select class="form-control" id="comboBox7"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_3.png"  class="center-image">
+                <select class="form-control" id="comboBox8"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_4.png"  class="center-image">
+                <select class="form-control" id="comboBox9"></select>
+            </div>
+
+            <div class="hero-block hero-block-sizes">
+                <img src="/roles/pos_5.png"  class="center-image">
+                <select class="form-control" id="comboBox10"></select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Таблиця з результатами -->
+    <!-- Блок для вибору героїв -->
+    <section class="heroes-section">
+        <div class="team-heroes">
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 1" id="heroImg1">
+                <div class="hero-stats" id="comboBox1-stats1">
+                    <div>
+                          <div class="row">
+                              <div class="column">
+                                  <div>Winrate</div>
+                                  <span id="winrate11">-</span>
+                              </div>
+                              <div class="column">
+                                  <div>Matches</div>
+                                  <span id="matches11">-</span>
+                              </div>
+                          </div>
+                        <img src="/roles/pos_1.png"  class="small-pic pos6">
+                    </div>
+                </div>
+
+                <div class="hero-stats" id="comboBox1-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate12">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches12">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos7">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox1-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate13">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches13">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos8">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox1-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate14">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches14">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos9">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox1-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate15">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches15">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos10">
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 2" id="heroImg2">
+                <div class="hero-stats" id="comboBox2-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate21">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches21">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos6">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox2-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate22">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches22">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos7">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox2-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate23">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches23">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos8">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox2-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate24">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches24">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos9">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox2-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate25">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches25">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos10">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 3" id="heroImg3">
+                <div class="hero-stats" id="comboBox3-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate31">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches31">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos6">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox3-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate32">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches32">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos7">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox3-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate33">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches33">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos8">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox3-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate34">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches34">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos9">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox3-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate35">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches35">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos10">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 4" id="heroImg4">
+                <div class="hero-stats" id="comboBox4-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate41">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches41">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos6">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox4-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate42">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches42">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos7">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox4-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate43">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches43">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos8">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox4-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate44">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches44">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos9">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox4-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate45">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches45">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos10">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 5" id="heroImg5">
+                <div class="hero-stats" id="comboBox5-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate51">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches51">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos6">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox5-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate52">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches52">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos7">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox5-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate53">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches53">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos8">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox5-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate54">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches54">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos9">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox5-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate55">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches55">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos10">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="team-heroes">
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 6" id="heroImg6">
+                <div class="hero-stats" id="comboBox6-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate61">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches61">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos1">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox6-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate62">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches62">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos2">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox6-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate63">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches63">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos3">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox6-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate64">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches64">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos4">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox6-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate65">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches65">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos5">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 7" id="heroImg7">
+                <div class="hero-stats" id="comboBox7-stats1 ">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate71">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches71">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos1">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox7-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate72">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches72">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos2">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox7-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate73">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches73">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos3">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox7-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate74">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches74">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos4">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox7-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate75">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches75">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos5">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 8" id="heroImg8">
+                <div class="hero-stats" id="comboBox8-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate81">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches81">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos1">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox8-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate82">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches82">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos2">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox8-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate83">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches83">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos3">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox8-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate84">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches84">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos4">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox8-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate85">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches85">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos5">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 9" id="heroImg9">
+                <div class="hero-stats" id="comboBox9-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate91">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches91">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos1">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox9-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate92">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches92">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos2">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox9-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate93">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches93">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos3">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox9-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate94">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches94">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos4">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox9-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate95">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches95">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos5">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="hero-block hero-block-stats">
+                <img src="" alt="Hero 10" id="heroImg10">
+                <div class="hero-stats" id="comboBox10-stats1">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate101">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches101">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_1.png" class="small-pic pos1">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox10-stats2">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate102">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches102">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_2.png" class="small-pic pos2">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox10-stats3">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate103">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches103">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_3.png" class="small-pic pos3">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox10-stats4">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate104">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches104">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_4.png" class="small-pic pos4">
+                    </div>
+                </div>
+                <div class="hero-stats" id="comboBox10-stats5">
+                    <div>
+                        <div class="row">
+                            <div class="column">
+                                <div>Winrate</div>
+                                <span id="winrate105">-</span>
+                            </div>
+                            <div class="column">
+                                <div>Matches</div>
+                                <span id="matches105">-</span>
+                            </div>
+                        </div>
+                        <img src="/roles/pos_5.png" class="small-pic pos5">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>© 2024 Мій сайт. Всі права захищені.</p>
+</footer>
+
+<script th:src="@{/js/script.js}"></script>
+<script th:src="|https://code.jquery.com/jquery-3.5.1.slim.min.js|"></script>
+<script th:src="|https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js|"></script>
+
+</body>
+</html>
+
