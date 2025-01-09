@@ -7,6 +7,7 @@ import artur.goz.userservice.services.MyUserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,15 +15,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
-@RequestMapping("/api")
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -34,14 +32,8 @@ public class AuthController {
     @Autowired
     private JWTGenerator jwtGeneretor;
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("user",new LoginDto());
-        return "login";
-    }
-
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginDto loginDto, HttpServletResponse response){
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getName(),
@@ -54,39 +46,31 @@ public class AuthController {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
-        return "redirect:/parser";
+        return ResponseEntity.ok("Login successful");
+        //return "redirect:/parser";
     }
 
-    @GetMapping("/register")
-    public String register(Model model){
-        model.addAttribute("user",new RegisterDto());
-        return "registerForm";
-    }
 
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("user") RegisterDto registerDto, BindingResult bindingResult,
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult,
                                Model model) {
         // Перевірка загальних помилок валідації
         if (bindingResult.hasErrors()) {
-            return "registerForm";
+            return ResponseEntity.badRequest().body("Invalid input");
+        }
+        // Перевірка, чи користувач вже існує
+        if (myUserService.checkUser(registerDto.getName())) {
+            return ResponseEntity.badRequest().body("User already exists");
         }
 
         // Перевірка рівності password та confirmPassword
         if (!registerDto.getPassword().equals(registerDto.getConfirmPassword())) {
-            model.addAttribute("errorConfirmPassword", "Passwords do not match");
-            return "registerForm";
+            return ResponseEntity.badRequest().body("Passwords do not match");
         }
 
-        // Перевірка, чи користувач вже існує
-        if (myUserService.checkUser(registerDto.getName())) {
-            model.addAttribute("errorMessage", "User already exists");
-            return "registerForm";
-        }
-
-        // Реєстрація користувача
         myUserService.registerUser(registerDto);
-        model.addAttribute("message", "User registered successfully");
-        return "login";
+        return ResponseEntity.ok("User registered successfully");
+        //redirect to login page
     }
 
 

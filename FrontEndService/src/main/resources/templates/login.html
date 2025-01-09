@@ -1,36 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/logReg.css}">
+  <link rel="stylesheet" type="text/css" href="/css/basicStyle.css">
+  <link rel="stylesheet" type="text/css" href="/css/logReg.css">
 </head>
 <body>
 <h2>Login Page</h2>
 
-
-
-
-<form th:action="@{/api/login}" id="loginForm" th:object="${user}" method="post">
+<form id="loginForm">
   <div>
-    <label for="name">Username:</label>
-    <input type="text" id="name" th:field="*{name}" required />
-  </div>
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" th:field="*{password}" required />
-  </div>
-  <div>
-    <button type="submit">Login</button>
-  </div>
-</form>
-
-<!--<form id="loginForm">
-  <div>
-    <label for="name">Username:</label>
-    <input type="text" id="name" name="name" required />
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required />
   </div>
   <div>
     <label for="password">Password:</label>
@@ -41,43 +24,47 @@
   </div>
 </form>
 
+<div id="message" class="message"></div>
+
 
 <script>
-  document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); // Зупиняє стандартне відправлення форми
 
-    const name = document.getElementById('name').value;
+    // Отримання даних з форми
+    const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    const loginData = {
-      name: name,
-      password: password
-    };
-    fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(loginData)
-    })
-            .then(response => response.json())
-            .then(data => {
-              const token = data.token;
-              // Збереження токену у localStorage
-              if (token) {
-                localStorage.setItem('jwtToken', token);
-                alert('Login successful!');
-                window.location.href = '/parser'; // Редірект на головну сторінку або іншу
-              } else {
-                alert('Login failed!');
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              alert('An error occurred during login.');
-            });
+    try {
+      // Відправка POST-запиту до REST API
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      // Обробка відповіді
+      const messageDiv = document.getElementById('message');
+      if (response.ok) {
+        const data = await response.text();
+        messageDiv.style.color = 'green';
+        messageDiv.textContent = data; // Вивід повідомлення про успішний логін
+        window.location.href = '/parser';
+      } else {
+        const errorText = await response.text();
+        messageDiv.style.color = 'red';
+        messageDiv.textContent = errorText; // Вивід повідомлення про помилку
+      }
+    } catch (error) {
+      // Виведення помилки у разі проблем із запитом
+      const messageDiv = document.getElementById('message');
+      messageDiv.style.color = 'red';
+      messageDiv.textContent = 'Error: Unable to connect to the server.';
+    }
   });
-</script>-->
+</script>
 
 </body>
 </html>
