@@ -8,6 +8,8 @@
         <option value="$PROJECT_DIR$/FrontEndService/pom.xml" />
         <option value="$PROJECT_DIR$/Eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/WinnerCalcutator/pom.xml" />
+        <option value="$PROJECT_DIR$/HeroesStatsService/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

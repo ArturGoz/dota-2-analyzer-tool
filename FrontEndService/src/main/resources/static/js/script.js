@@ -79,7 +79,7 @@ else{
 
 
 
-fetch('/parser/getData', {
+fetch('/analyze/game', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
