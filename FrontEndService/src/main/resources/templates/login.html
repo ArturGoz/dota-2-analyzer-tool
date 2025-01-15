@@ -12,8 +12,8 @@
 
 <form id="loginForm">
   <div>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required />
+    <label for="name">Username:</label>
+    <input type="text" id="name" name="name" required />
   </div>
   <div>
     <label for="password">Password:</label>
@@ -32,7 +32,7 @@
     e.preventDefault(); // Зупиняє стандартне відправлення форми
 
     // Отримання даних з форми
-    const username = document.getElementById('username').value;
+    const name = document.getElementById('name').value;
     const password = document.getElementById('password').value;
 
     try {
@@ -42,16 +42,30 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ name, password }),
       });
 
       // Обробка відповіді
       const messageDiv = document.getElementById('message');
       if (response.ok) {
-        const data = await response.text();
-        messageDiv.style.color = 'green';
-        messageDiv.textContent = data; // Вивід повідомлення про успішний логін
-        window.location.href = '/parser';
+        // Отримання JWT токена із заголовка відповіді
+        const token = response.headers.get('Authorization');
+
+        if (token) {
+          // Збереження токена у Local Storage
+          localStorage.setItem('jwtToken', token);
+
+          messageDiv.style.color = 'green';
+          messageDiv.textContent = 'Login successful! Redirecting...';
+
+          // Перенаправлення на іншу сторінку
+          setTimeout(() => {
+            window.location.href = '/analyze/getPage';
+          }, 1000);
+        } else {
+          messageDiv.style.color = 'red';
+          messageDiv.textContent = 'Login successful, but no token received.';
+        }
       } else {
         const errorText = await response.text();
         messageDiv.style.color = 'red';

@@ -31,18 +31,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/parser").permitAll()
+                        .requestMatchers("/analyze/getPage").permitAll()
                         .requestMatchers("/resources/templates/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/miniheroes/**", "/roles/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/parser/**").authenticated()
-                        .requestMatchers("/purchase/**").authenticated()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/analyze/**").authenticated()
                         .anyRequest().authenticated()
                 )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout
-                        .logoutUrl("/api/logout") // Задаємо свій URL для виходу
-                        .logoutSuccessUrl("/api/login") // Переадресація після виходу
+                        .logoutUrl("/auth/logout") // Задаємо свій URL для виходу
+                        .logoutSuccessUrl("/auth/login") // Переадресація після виходу
                         .invalidateHttpSession(true) // Інвалідуючи сесію
                         .deleteCookies("JSESSIONID", "JWT") // Видалення cookies
                 )

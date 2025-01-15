@@ -30,32 +30,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private MyUserDetailService myUserDetailService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-      //  String token = getJwtFromRequest(request);
+        // Отримання токена з заголовка Authorization
+        String token = request.getHeader("Authorization");
 
-
-        String token = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JWT".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                }
-            }
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            token = token.substring(7); // Видалення префіксу "Bearer "
         }
+        logger.info("JWT Token: " + token);
 
+        // Перевірка наявності токена та його валідності
         if (StringUtils.hasText(token) && jwtGeneretor.validateJWT(token)) {
             String username = jwtGeneretor.getUsernameFromJWT(token);
 
             UserDetails userDetails = myUserDetailService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         filterChain.doFilter(request, response);
     }
+
 }
 

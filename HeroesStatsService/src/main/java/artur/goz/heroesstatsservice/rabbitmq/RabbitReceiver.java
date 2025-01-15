@@ -17,9 +17,11 @@ public class RabbitReceiver {
     private GameStatsService gameStatsService;
 
     @RabbitListener(queues = {"FirstQueue"})
-    public GameStats receive(HeroesInfo heroesInfo) {
-        log.info(heroesInfo.getClass());
+    public GameStats receiveMessage(HeroesInfo heroesInfo) {
+        log.info("Received HeroesInfo: {}", heroesInfo);
+        // Логіка обробки даних
         GameStats gameStats = gameStatsService.getGameStats(heroesInfo);
-        return gameStats;
+        log.info("Returning GameStats: {}", gameStats);
+        return gameStats; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
     }
 }

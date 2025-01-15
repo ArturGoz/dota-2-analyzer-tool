@@ -12,8 +12,8 @@
 
 <form id="registration-form">
     <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="name" required />
+        <label for="name">Username:</label>
+        <input type="text" id="name" name="name" required />
     </div>
     <div>
         <label for="email">Email:</label>
@@ -43,7 +43,7 @@
 
             // Collect form data
             const formData = {
-                name: document.getElementById("username").value,
+                name: document.getElementById("name").value,
                 email: document.getElementById("email").value,
                 password: document.getElementById("password").value,
                 confirmPassword: document.getElementById("confirm-password").value,

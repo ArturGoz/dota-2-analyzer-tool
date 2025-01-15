@@ -8,19 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@RestController
 @RequestMapping("/analyze")
 public class WinrateCalculatorController {
     private static final Logger logger = LoggerFactory.getLogger(WinrateCalculatorController.class);
@@ -30,7 +24,7 @@ public class WinrateCalculatorController {
 
     @PostMapping("/game")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getWinrate(@RequestBody String[] allHeroes, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Map<String, Object>> getWinrate(@RequestBody String[] allHeroes) {
         Map<String, Object> response = new HashMap<>();
 /*
         try {

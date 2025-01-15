@@ -33,22 +33,22 @@ public class AuthController {
     private JWTGenerator jwtGeneretor;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getName(),
                         loginDto.getPassword()
-                ));
+                )
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        // Генерація JWT токена
         String token = jwtGeneretor.generateJWT(authentication);
+        // Додавання токена у заголовок
+        response.setHeader("Authorization", "Bearer " + token);
 
-        Cookie cookie = new Cookie("JWT", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
         return ResponseEntity.ok("Login successful");
-        //return "redirect:/parser";
     }
+
 
 
     @PostMapping("/register")

@@ -5,8 +5,10 @@ import artur.goz.heroesstatsservice.dto.GameStats;
 import artur.goz.heroesstatsservice.dto.HeroStats;
 import artur.goz.heroesstatsservice.dto.HeroesInfo;
 import artur.goz.heroesstatsservice.services.HeroMatchUpsService;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 @Service
 @Getter
+@Setter
 @NoArgsConstructor
 public class GameStatsService {
     private static final Logger log = LogManager.getLogger(GameStatsService.class);
