@@ -45,7 +45,6 @@ public class AuthController {
         String token = jwtGeneretor.generateJWT(authentication);
         // Додавання токена у заголовок
         response.setHeader("Authorization", "Bearer " + token);
-
         return ResponseEntity.ok("Login successful");
     }
 
@@ -72,8 +71,4 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
         //redirect to login page
     }
-
-
-
-
 }

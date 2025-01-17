@@ -21,7 +21,7 @@
             <ul>
                 <li><a href="/auth/register">Register</a></li>
                 <li><a href="/auth/login">Login</a></li>
-                <li><a href="/auth/logout">Logout</a></li>
+                <button id="logout">Check Winrate</button>
                 <li><h1 id="greeting"></h1></li>
                 <li>
                     <a href="#" id="depositButton">Deposit</a>
@@ -960,8 +960,16 @@
     <p>© 2024 Мій сайт. Всі права захищені.</p>
 </footer>
 
-<script src="/js/script.js"></script>
+<script>
+    document.getElementById("logout").addEventListener("click", function() {
+        alert("This is a message!"); // Show the alert message
+        localStorage.removeItem("jwtToken"); // Remove the token from localStorage after successful logout
+        window.location.href = "/auth/logout"; // Redirect to login page
+    });
+</script>
+
 <script src="/js/analyze.js"></script>
+<script src="/js/script.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 

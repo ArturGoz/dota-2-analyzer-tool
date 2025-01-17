@@ -9,10 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -25,8 +22,8 @@ public class ProfileController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @GetMapping("/general")
-    public String getGeneral(@AuthenticationPrincipal MyUserDetails user, Model model){
+/*    @GetMapping("/general")
+    public String getGeneral(@RequestHeader("Authorization") String token){
         if(user == null)
             return "login";
 
@@ -36,7 +33,7 @@ public class ProfileController {
             model.addAttribute("userEmail", optionalUser.get().getEmail());
         }
         return "profile";
-    }
+    }*/
 
     @GetMapping("/password")
     public String getPasswordPage(@AuthenticationPrincipal MyUserDetails user){
