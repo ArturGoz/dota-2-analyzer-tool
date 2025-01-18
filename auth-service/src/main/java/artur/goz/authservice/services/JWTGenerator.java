@@ -20,35 +20,17 @@ public class JWTGenerator {
         return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS512.getJcaName());
     }
 
-    public String generateJWT(Authentication authentication) {
+    public String generateJWT(String username, String roles) {
         SecretKey key = getSigningKey();
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 864_000))
-                .signWith(key)
+                .setSubject(username) // Ім'я користувача
+                .claim("roles", roles) // Додавання ролей до claims
+                .setIssuedAt(new Date()) // Дата створення токена
+                .setExpiration(new Date(System.currentTimeMillis() + 864_000)) // Час дії токена (10 хвилин)
+                .signWith(key) // Підпис
                 .compact();
     }
-
-    public String getUsernameFromJWT(String token) {
-        SecretKey key = getSigningKey();
-        Claims claims = Jwts.parserBuilder() // Використання нового методу
-                .setSigningKey(key) // Передача об'єкта ключа
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
-    }
-    public boolean validateJWT(String token) {
-        try {
-            Jwts.parserBuilder() // Використання нового API
-                    .setSigningKey(getSigningKey()) // Передача ключа
-                    .build() // Побудова парсера
-                    .parseClaimsJws(token); // Верифікація токена
-            return true;
-        } catch (Exception e) {
-            System.out.println("Invalid JWT");
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
-        }
-    }
 }
+
+
+

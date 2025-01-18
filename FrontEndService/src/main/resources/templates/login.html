@@ -48,19 +48,20 @@
       // Обробка відповіді
       const messageDiv = document.getElementById('message');
       if (response.ok) {
-        // Отримання JWT токена із заголовка відповіді
-        const token = response.headers.get('Authorization');
+        // Отримання JWT токена з тіла відповіді
+        const jwtResponse = await response.json();
+        const token = jwtResponse.token;
 
         if (token) {
-          // Збереження токена у Local Storage
-          localStorage.setItem('jwtToken', token);
+          // Додавання префіксу Bearer та збереження токена у Local Storage
+          localStorage.setItem('jwtToken', `Bearer ${token}`);
 
           messageDiv.style.color = 'green';
           messageDiv.textContent = 'Login successful! Redirecting...';
 
           // Перенаправлення на іншу сторінку
           setTimeout(() => {
-            window.location.href = '/analyze/getPage';
+            window.location.href = '/page/getAnalyze';
           }, 1000);
         } else {
           messageDiv.style.color = 'red';
@@ -78,6 +79,7 @@
       messageDiv.textContent = 'Error: Unable to connect to the server.';
     }
   });
+
 </script>
 
 </body>

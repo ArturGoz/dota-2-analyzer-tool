@@ -1,3 +1,4 @@
+/*
 package artur.goz.userservice.services;
 
 
@@ -23,3 +24,4 @@ public class MyUserDetailService implements UserDetailsService {
                 .orElseThrow(()-> new UsernameNotFoundException(username + " not found"));
     }
 }
+*/

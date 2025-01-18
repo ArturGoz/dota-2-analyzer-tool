@@ -1,10 +1,10 @@
+/*
 package artur.goz.userservice.controlles;
 
 import artur.goz.userservice.dto.LoginDto;
 import artur.goz.userservice.dto.RegisterDto;
 import artur.goz.userservice.securityConfigs.JWTGenerator;
 import artur.goz.userservice.services.MyUserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -72,3 +71,4 @@ public class AuthController {
         //redirect to login page
     }
 }
+*/

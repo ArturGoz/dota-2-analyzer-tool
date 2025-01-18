@@ -1,3 +1,4 @@
+/*
 package artur.goz.userservice.securityConfigs;
 
 import artur.goz.userservice.services.MyUserDetailService;
@@ -35,7 +36,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                /*.cors(withDefaults()) // Enable CORS with default settings*/
+                */
+/*.cors(withDefaults()) // Enable CORS with default settings*//*
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/analyze/getPage").permitAll()
                         .requestMatchers("/resources/templates/**").permitAll()
@@ -75,6 +78,7 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+*/
 /*    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -84,6 +88,8 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }*/
+    }*//*
+
 
 }
+*/

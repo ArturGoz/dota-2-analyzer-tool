@@ -1,20 +1,28 @@
-package artur.goz.userservice.securityConfigs;
+package artur.goz.apigateway.configs;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-@Component
-public class JWTGenerator {
+@Service
+@NoArgsConstructor
+@AllArgsConstructor
+@Slf4j
+public class JwtValidator {
+
     @Value("${jwtSecret}")
     private String jwtSecret;
 
@@ -22,25 +30,27 @@ public class JWTGenerator {
         return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS512.getJcaName());
     }
 
-    public String generateJWT(Authentication authentication) {
-        SecretKey key = getSigningKey();
-        return Jwts.builder()
-                .setSubject(authentication.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 864_000))
-                .signWith(key)
-                .compact();
-    }
 
     public String getUsernameFromJWT(String token) {
+        Claims claims = getClaimsFromJWT(token);
+        return claims.getSubject();
+    }
+
+    public String getRolesFromJWT(String token) {
+        Claims claims = getClaimsFromJWT(token);
+        return claims.get("roles", String.class);
+    }
+
+    public Claims getClaimsFromJWT(String token) {
         SecretKey key = getSigningKey();
-        Claims claims = Jwts.parserBuilder() // Використання нового методу
+
+        return Jwts.parserBuilder() // Використання нового методу
                 .setSigningKey(key) // Передача об'єкта ключа
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getSubject();
     }
+
     public boolean validateJWT(String token) {
         try {
             Jwts.parserBuilder() // Використання нового API
@@ -49,8 +59,9 @@ public class JWTGenerator {
                     .parseClaimsJws(token); // Верифікація токена
             return true;
         } catch (Exception e) {
-            System.out.println("Invalid JWT");
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
+            log.warn("{} invalid JWT token ", e.getMessage());
+            return false;
         }
     }
 }
+

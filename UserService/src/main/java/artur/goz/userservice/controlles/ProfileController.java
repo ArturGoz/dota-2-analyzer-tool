@@ -1,3 +1,4 @@
+/*
 package artur.goz.userservice.controlles;
 
 
@@ -22,6 +23,7 @@ public class ProfileController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+*/
 /*    @GetMapping("/general")
     public String getGeneral(@RequestHeader("Authorization") String token){
         if(user == null)
@@ -33,7 +35,8 @@ public class ProfileController {
             model.addAttribute("userEmail", optionalUser.get().getEmail());
         }
         return "profile";
-    }*/
+    }*//*
+
 
     @GetMapping("/password")
     public String getPasswordPage(@AuthenticationPrincipal MyUserDetails user){
@@ -74,4 +77,4 @@ public class ProfileController {
         return "redirect:/api/login?logout";
     }
 
-}
+}*/

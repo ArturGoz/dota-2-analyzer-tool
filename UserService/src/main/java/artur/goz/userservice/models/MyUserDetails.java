@@ -1,3 +1,4 @@
+/*
 package artur.goz.userservice.models;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -48,3 +49,4 @@ public class MyUserDetails implements UserDetails {
         return true;
     }
 }
+*/

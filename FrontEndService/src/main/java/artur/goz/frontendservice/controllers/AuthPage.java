@@ -5,17 +5,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/page")
 public class AuthPage {
 
-    @GetMapping("register")
+    @GetMapping("getRegister")
     public String register() {
         return "register";
     }
 
-    @GetMapping("login")
+    @GetMapping("getLogin")
     public String login() {
         return "login";
+    }
+
+    @GetMapping("/getAnalyze")
+    public String getPage() {
+        return "parser";
     }
 
 }
