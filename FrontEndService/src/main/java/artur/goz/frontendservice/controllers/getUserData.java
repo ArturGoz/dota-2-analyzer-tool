@@ -13,9 +13,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/get")
 public class getUserData {
-    @RestController
-    @RequestMapping("/api")
-    public class UserController {
 
         @GetMapping("/user-info")
         public ResponseEntity<Map<String, String>> getUserInfo(
@@ -32,6 +29,7 @@ public class getUserData {
             response.put("roles", roles);
             return ResponseEntity.ok(response);
         }
+
+
     }
 
-}
