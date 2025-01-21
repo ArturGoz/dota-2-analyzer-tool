@@ -81,4 +81,10 @@ public class MyUserService {
         myUser.setPassword(newPassword);
         myUserRepo.save(myUser);
     }
+
+    public void decrementUserLimit(String username){
+        MyUser myUser= getMyUserByName(username).orElseThrow();
+        myUser.setMonthlyLimit(myUser.getMonthlyLimit() - 1);
+        myUserRepo.save(myUser);
+    }
 }

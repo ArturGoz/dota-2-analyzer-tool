@@ -18,6 +18,9 @@ public class RabbitConfig {
     @Value("${queue.name}")
     private String queueName;
 
+    @Value("${queue.decrementLimitForUser}")
+    private String queueDecrementLimitForUser;
+
     @Value("${spring.rabbitmq.username}")
     private String username;
 
@@ -30,6 +33,11 @@ public class RabbitConfig {
     @Bean
     public Queue queue(){
         return new Queue(queueName, false);
+    }
+
+    @Bean
+    public Queue queue2(){
+        return new Queue(queueDecrementLimitForUser, false);
     }
 
     @Bean

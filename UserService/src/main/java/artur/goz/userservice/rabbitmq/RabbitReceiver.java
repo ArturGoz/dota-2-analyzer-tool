@@ -20,7 +20,7 @@ public class RabbitReceiver {
 
     @RabbitListener(queues = {"RegisterQueue"})
     public MyUserVO receiveMessage(RegisterDto registerDto) {
-        log.info("Received RegisterDto: {}", registerDto);
+        log.debug("Received RegisterDto: {}", registerDto);
 
         MyUserVO myUserVO = new MyUserVO();
         myUserVO.setEmail(registerDto.getEmail());
@@ -30,13 +30,13 @@ public class RabbitReceiver {
 
         myUserService.registerUser(registerDto);
 
-        log.info("Returning MyUserVO: {}", myUserVO);
+        log.debug("Returning MyUserVO: {}", myUserVO);
         return myUserVO; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
     }
 
     @RabbitListener(queues = {"LoginQueue"})
     public MyUserVO receiveMessage(LoginDto loginDto) {
-        log.info("Received LoginDto: {}", loginDto);
+        log.debug("Received LoginDto: {}", loginDto);
 
         MyUser myUser = myUserService.getMyUserByName(loginDto.getName()).orElse(null);
 
@@ -50,9 +50,14 @@ public class RabbitReceiver {
         myUserVO.setRole(String.join(",", myUser.getRoles()));
 
 
-        log.info("Returning MyUserVO : {}", myUserVO);
+        log.debug("Returning MyUserVO : {}", myUserVO);
         return myUserVO; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
     }
 
-
+    @RabbitListener(queues = {"decrementLimitForUserQueue"})
+    public void receiveUsername(String username) {
+        log.debug("Receiving  username : {}", username);
+        myUserService.decrementUserLimit(username);
+        log.debug("decrementing is done for: {}", username);
+    }
 }

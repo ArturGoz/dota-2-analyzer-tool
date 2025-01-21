@@ -20,6 +20,9 @@ public class RabbitConfig {
     @Value("${queue.register}")
     private String registerQueue;
 
+    @Value("${queue.decrementLimitForUser}")
+    private String queueDecrementLimitForUser;
+
     @Value("${spring.rabbitmq.username}")
     private String username;
 
@@ -37,6 +40,11 @@ public class RabbitConfig {
     @Bean
     public Queue queue2(){
         return new Queue(registerQueue, false);
+    }
+
+    @Bean
+    public Queue queue3(){
+        return new Queue(queueDecrementLimitForUser, false);
     }
 
     @Bean

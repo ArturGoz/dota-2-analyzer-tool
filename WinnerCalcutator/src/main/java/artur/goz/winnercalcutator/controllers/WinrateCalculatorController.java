@@ -24,10 +24,13 @@ public class WinrateCalculatorController {
 
     @PostMapping("/game")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getWinrate(@RequestBody String[] allHeroes) {
+    public ResponseEntity<Map<String, Object>> getWinrate(@RequestBody String[] allHeroes,
+                                                          @RequestHeader(value = "X-User-Name") String username) {
         Map<String, Object> response = new HashMap<>();
-/*
-        try {
+
+            messageSender.decrementUserLimit(username);
+
+
             MyUser user = myUserRepo.findByName(userDetails.getUsername()).orElseThrow();
 
             // Перевірка чи залишився ліміт
@@ -38,7 +41,7 @@ public class WinrateCalculatorController {
                 response.put("error", "Monthly limit exceeded!");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-*/
+
         try {
             GameStats gameStats = messageSender.sendMessage(new HeroesInfo
                     (
