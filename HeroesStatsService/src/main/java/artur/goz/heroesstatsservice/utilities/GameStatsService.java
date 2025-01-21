@@ -32,12 +32,11 @@ public class GameStatsService {
 
     public GameStats getGameStats(HeroesInfo heroesInfo) {
         GameStats gameStats = new GameStats();
-        int noWinrateForHeroesCounter = 0;
         int heroesWithWinrate = heroesInfo.getHeroes().length;
         float generalWinrate = 0;
 
         for (int i = 0; i < heroesInfo.getHeroes().length; i++) {
-            float heroWinrate = calculateHeroWinrate(heroesInfo.getHeroes()[i], heroesInfo.getEnemies(), heroPositions[i], noWinrateForHeroesCounter);
+            float heroWinrate = calculateHeroWinrate(heroesInfo.getHeroes()[i], heroesInfo.getEnemies(), heroPositions[i], gameStats);
             if (heroWinrate == -1) {
                 heroesWithWinrate--;
             } else {
@@ -45,7 +44,6 @@ public class GameStatsService {
             }
         }
 
-        gameStats.setNoWinrateForHeroesCounter(noWinrateForHeroesCounter);
         gameStats.setHeroStatsMap(heroStatsMap);
 
         if (heroesWithWinrate == 0) {
@@ -60,7 +58,7 @@ public class GameStatsService {
         return gameStats;
     }
 
-    private float calculateHeroWinrate(String hero, String[] enemies, String heroPosition, int noWinrateForHeroesCounter) {
+    private float calculateHeroWinrate(String hero, String[] enemies, String heroPosition, GameStats gameStats) {
         int validMatches = enemies.length;
         float totalWinrate = 0;
 
@@ -69,7 +67,7 @@ public class GameStatsService {
             if (winrate == -1) {
                 log.info("{}{} has no 20 matches with {}{}", heroPosition, hero, heroPositions[j], enemies[j]);
                 validMatches--;
-                noWinrateForHeroesCounter++;
+                gameStats.setNoWinrateForHeroesCounter(gameStats.getNoWinrateForHeroesCounter() + 1);;
             } else {
                 totalWinrate += winrate;
             }

@@ -37,6 +37,7 @@ public class AuthController {
         }
     }
 
+
     @PostMapping("/sayHello")
     public ResponseEntity<String> registerUser() {
         return ResponseEntity.ok("Hello World!");
