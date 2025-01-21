@@ -1,6 +1,7 @@
 package artur.goz.apigateway.configs;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -11,6 +12,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GlobalFilter {
@@ -40,10 +42,17 @@ public class JwtAuthenticationFilter implements GlobalFilter {
                 // Додати інформацію про користувача в заголовок
                 String username = jwtValidator.getUsernameFromJWT(token);
                 String roles = jwtValidator.getRolesFromJWT(token);
-                exchange.getRequest().mutate()
+
+                log.debug(username);
+                log.debug(roles);
+
+                ServerHttpRequest mutatedRequest = request.mutate()
                         .header("X-User-Name", username)
                         .header("X-Roles", roles)
                         .build();
+
+                // Оновити exchange з новим запитом
+                exchange = exchange.mutate().request(mutatedRequest).build();
             }
             return chain.filter(exchange);
         }

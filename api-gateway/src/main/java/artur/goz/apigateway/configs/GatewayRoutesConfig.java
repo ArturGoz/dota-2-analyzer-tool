@@ -27,6 +27,8 @@ public class GatewayRoutesConfig {
                         .uri("lb://FRONT-SERVICE"))
                 .route("auth-front-service", r -> r.path("/page/**")
                         .uri("lb://FRONT-SERVICE"))
+                .route("getter-front-service", r -> r.path("/get/**")
+                        .uri("lb://FRONT-SERVICE"))
                 .route("auth-service", r -> r.path("/auth/**")
                         .uri("lb://AUTH-SERVICE"))
                 .route("game", r -> r.path("/analyze/**")

@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
         showWinrateElement.textContent = "Авторизуйтесь, щоб побачити результати";
     } else {
         // Перевірка валідності токена (можна зробити запит до сервера)
-        fetch("/getUserFromToken", {
-            method: "POST",
+        fetch("/get/user-info", {
+            method: "GET",
             headers: {
                 "Authorization": token,
                 "Content-Type": "application/json",
