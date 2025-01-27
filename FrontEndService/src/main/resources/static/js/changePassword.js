@@ -8,13 +8,13 @@ document.getElementById("changePasswordForm").addEventListener("submit", async f
         oldPassword: oldPassword,
         newPassword: newPassword,
     };
-
+    const token = localStorage.getItem("jwtToken");
     try {
         const response = await fetch("/profile/passwordChange", {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "X-User-Name": "exampleUsername", // Replace with actual username if needed
+                "Authorization": token
             },
             body: JSON.stringify(changePasswordData),
         });

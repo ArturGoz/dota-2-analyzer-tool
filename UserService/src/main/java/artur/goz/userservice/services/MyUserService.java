@@ -89,8 +89,7 @@ public class MyUserService {
         myUserRepo.save(myUser);
     }
 
-    public MyUserVO createMyUserVO(String username){
-        MyUser myUser = getMyUserByName(username).orElseThrow();
+    public MyUserVO createMyUserVO(MyUser myUser){
 
         MyUserVO myUserVO = new MyUserVO();
         myUserVO.setEmail(myUser.getEmail());
@@ -99,5 +98,26 @@ public class MyUserService {
         myUserVO.setRole(String.join(",", myUser.getRoles()));
 
         return myUserVO;
+    }
+
+    public MyUserVO auth(String username, String password){
+        MyUser myUser = getMyUserByName(username).orElseThrow();
+        if(!doPasswordMatch(myUser, password)) {
+            throw new RuntimeException("wrong password");
+        }
+        return createMyUserVO(myUser);
+    }
+
+    public boolean doPasswordMatch(MyUser myUser, String password){
+        return passwordEncoder.matches(password, myUser.getPassword());
+    }
+
+    public MyUserVO findUserVO(String username) {
+        MyUser myUser = getMyUserByName(username).orElseThrow();
+        return createMyUserVO(myUser);
+    }
+
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

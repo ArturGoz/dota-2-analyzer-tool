@@ -18,8 +18,9 @@ public class RabbitReceiver {
     @Autowired
     private MyUserService myUserService;
 
+    //registering
     @RabbitListener(queues = {"RegisterQueue"})
-    public MyUserVO receiveMessage(RegisterDto registerDto) {
+    public MyUserVO receiveRegisteDto(RegisterDto registerDto) {
         log.debug("Received RegisterDto: {}", registerDto);
 
         MyUserVO myUserVO = new MyUserVO();
@@ -33,11 +34,11 @@ public class RabbitReceiver {
         log.debug("Returning MyUserVO: {}", myUserVO);
         return myUserVO; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
     }
-
+    //logining
     @RabbitListener(queues = {"LoginQueue"})
-    public MyUserVO receiveMessage(LoginDto loginDto) {
+    public MyUserVO receiveLodinDto(LoginDto loginDto) {
         log.debug("Received LoginDto: {}", loginDto);
-        MyUserVO myUserVO = myUserService.createMyUserVO(loginDto.getName());
+        MyUserVO myUserVO = myUserService.auth(loginDto.getName(),loginDto.getPassword());
         log.debug("Returning MyUserVO : {}", myUserVO);
         return myUserVO; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
     }

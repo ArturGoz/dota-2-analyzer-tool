@@ -22,14 +22,11 @@ public class ProfileController {
     @Autowired
     MyUserService myUserService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @GetMapping("/getUserInfo")
     public ResponseEntity<MyUserVO> getUserInfo2(
             @RequestHeader(value = "X-User-Name") String username) {
 
-        MyUserVO myUserVO = myUserService.createMyUserVO(username);
+        MyUserVO myUserVO = myUserService.findUserVO(username);
         myUserVO.setPassword(null);
         return ResponseEntity.ok(myUserVO);
     }
@@ -42,7 +39,7 @@ public class ProfileController {
         MyUser myUser = myUserService.getMyUserByName(username)
                 .orElseThrow(() -> new RuntimeException("User not found for changing password"));
 
-        if (!passwordEncoder.matches(changePassword.getOldPassword(), myUser.getPassword())) {
+        if (myUserService.doPasswordMatch(myUser,changePassword.getOldPassword())) {
             return ResponseEntity.badRequest().body("Старий пароль введено неправильно!");
         }
 
@@ -50,8 +47,8 @@ public class ProfileController {
             return ResponseEntity.badRequest().body("Новий пароль має бути щонайменше 8 символів!");
         }
 
-        // Оновлення пароля
-        String encodedNewPassword = passwordEncoder.encode(changePassword.getNewPassword());
+        String encodedNewPassword = myUserService.encodePassword(changePassword.getNewPassword());
+
         log.info("New password: {}", encodedNewPassword);
         myUserService.updatePassword(myUser, encodedNewPassword);
         return ResponseEntity.ok("Пароль був змінений успішно");
