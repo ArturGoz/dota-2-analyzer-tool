@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/logReg.css}">
 </head>
 <body>
 <header>
@@ -14,13 +11,31 @@
 </header>
 
 <main>
-        <p><strong>Name:</strong> <span th:text="${userName}"></span></p>
-    <p><strong>Name:</strong> <span th:text="${userPass}"></span></p>
-        <p><strong>Email:</strong> <span th:text="${userEmail}"></span></p>
+    <p><strong>Name:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <p><strong>Role:</strong> <span id="userRole"></span></p>
+
+    <section id="changePasswordSection">
+        <h2>Change Password</h2>
+        <form id="changePasswordForm">
+            <label for="oldPassword">Old Password:</label>
+            <input type="password" id="oldPassword" name="oldPassword" required minlength="8">
+            <br>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required minlength="8">
+            <br>
+            <button type="submit">Change Password</button>
+        </form>
+        <p id="changePasswordMessage" style="color: red;"></p>
+    </section>
+
 </main>
 
 <footer>
     <p>&copy; 2024 Your Website Name</p>
 </footer>
+<script src="/js/profile.js"></script>
+<script src="/js/changePassword.js"></script>
 </body>
 </html>
+

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/page")
-public class AuthPage {
+public class PageController {
 
     @GetMapping("getRegister")
     public String register() {
@@ -19,8 +19,12 @@ public class AuthPage {
     }
 
     @GetMapping("/getAnalyze")
-    public String getPage() {
+    public String getAnalyzerPage() {
         return "parser";
     }
 
+    @GetMapping("/getProfile")
+    public String getProfilePage() {
+        return "profile";
+    }
 }

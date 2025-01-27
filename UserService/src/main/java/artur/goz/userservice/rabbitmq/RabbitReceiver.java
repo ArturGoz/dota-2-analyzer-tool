@@ -37,19 +37,7 @@ public class RabbitReceiver {
     @RabbitListener(queues = {"LoginQueue"})
     public MyUserVO receiveMessage(LoginDto loginDto) {
         log.debug("Received LoginDto: {}", loginDto);
-
-        MyUser myUser = myUserService.getMyUserByName(loginDto.getName()).orElse(null);
-
-        if (myUser == null) {
-            return null;
-        }
-        MyUserVO myUserVO = new MyUserVO();
-        myUserVO.setEmail(myUser.getEmail());
-        myUserVO.setName(myUser.getName());
-        myUserVO.setPassword(myUser.getPassword());
-        myUserVO.setRole(String.join(",", myUser.getRoles()));
-
-
+        MyUserVO myUserVO = myUserService.createMyUserVO(loginDto.getName());
         log.debug("Returning MyUserVO : {}", myUserVO);
         return myUserVO; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
     }

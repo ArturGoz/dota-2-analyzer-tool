@@ -33,6 +33,8 @@ public class GatewayRoutesConfig {
                         .uri("lb://AUTH-SERVICE"))
                 .route("game", r -> r.path("/analyze/**")
                         .uri("lb://WINNER-CALCULATOR"))
+                .route("user-service", r -> r.path("/profile/**")
+                        .uri("lb://USER-SERVICE"))
                 .build();
     }
 

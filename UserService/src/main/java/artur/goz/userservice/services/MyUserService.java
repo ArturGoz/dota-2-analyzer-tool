@@ -1,5 +1,6 @@
 package artur.goz.userservice.services;
 
+import artur.goz.userservice.dto.MyUserVO;
 import artur.goz.userservice.dto.RegisterDto;
 import artur.goz.userservice.models.MyUser;
 import artur.goz.userservice.repositories.MyUserRepo;
@@ -86,5 +87,17 @@ public class MyUserService {
         MyUser myUser= getMyUserByName(username).orElseThrow();
         myUser.setMonthlyLimit(myUser.getMonthlyLimit() - 1);
         myUserRepo.save(myUser);
+    }
+
+    public MyUserVO createMyUserVO(String username){
+        MyUser myUser = getMyUserByName(username).orElseThrow();
+
+        MyUserVO myUserVO = new MyUserVO();
+        myUserVO.setEmail(myUser.getEmail());
+        myUserVO.setName(myUser.getName());
+        myUserVO.setPassword(myUser.getPassword());
+        myUserVO.setRole(String.join(",", myUser.getRoles()));
+
+        return myUserVO;
     }
 }

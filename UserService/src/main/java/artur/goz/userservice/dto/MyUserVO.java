@@ -1,5 +1,6 @@
 package artur.goz.userservice.dto;
 
+import artur.goz.userservice.models.MyUser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

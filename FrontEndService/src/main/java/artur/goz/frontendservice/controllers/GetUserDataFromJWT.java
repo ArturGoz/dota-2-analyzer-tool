@@ -12,24 +12,18 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/get")
-public class getUserData {
+public class GetUserDataFromJWT {
 
-        @GetMapping("/user-info")
+        @GetMapping("/user-info-jwt")
         public ResponseEntity<Map<String, String>> getUserInfo(
                 @RequestHeader(value = "X-User-Name", required = false) String username,
                 @RequestHeader(value = "X-Roles", required = false) String roles) {
-
-            if (username == null || roles == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "Missing headers or invalid token"));
-            }
 
             Map<String, String> response = new HashMap<>();
             response.put("username", username);
             response.put("roles", roles);
             return ResponseEntity.ok(response);
         }
-
 
     }
 
