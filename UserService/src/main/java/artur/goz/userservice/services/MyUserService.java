@@ -101,7 +101,7 @@ public class MyUserService {
     }
 
     public MyUserVO auth(String username, String password){
-        MyUser myUser = getMyUserByName(username).orElseThrow();
+        MyUser myUser = getMyUserByName(username).orElseThrow(() -> new RuntimeException("no such user"));
         if(!doPasswordMatch(myUser, password)) {
             throw new RuntimeException("wrong password");
         }
