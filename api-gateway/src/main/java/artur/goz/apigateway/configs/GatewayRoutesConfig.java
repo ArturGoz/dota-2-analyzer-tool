@@ -35,7 +35,7 @@ public class GatewayRoutesConfig {
                         .uri("lb://WINNER-CALCULATOR"))
                 .route("user-service", r -> r.path("/profile/**")
                         .uri("lb://USER-SERVICE"))
-                .route("tour-service", r -> r.path("/tour/**")
+                .route("tour-service", r -> r.path("/tournament/**")
                         .uri("lb://TOURNAMENT-SERVICE"))
                 .build();
     }
