@@ -27,7 +27,7 @@ public class PageController {
     public String getProfilePage() {
         return "profile";
     }
-    @GetMapping("/results")
+    @GetMapping("/getResults")
     public String getResultsPage() {
         return "results";
     }
