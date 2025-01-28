@@ -24,7 +24,6 @@ public class AuthService {
 
     public JWTResponse login(LoginDto loginDto) {
         //перевірка логину
-
         MyUserVO myUserVO = messageSender.sendLogin(loginDto);
         String token = jwtGenerator.generateJWT(myUserVO.getName(),myUserVO.getRole());
         return new JWTResponse(token);

@@ -84,7 +84,7 @@ public class MyUserService {
     }
 
     public void decrementUserLimit(String username){
-        MyUser myUser= getMyUserByName(username).orElseThrow();
+        MyUser myUser= getMyUserByName(username).orElseThrow(() -> new RuntimeException("no such user"));
         myUser.setMonthlyLimit(myUser.getMonthlyLimit() - 1);
         myUserRepo.save(myUser);
     }

@@ -18,10 +18,15 @@ public class RabbitReceiver {
 
     @RabbitListener(queues = {"FirstQueue"})
     public GameStats receiveMessage(HeroesInfo heroesInfo) {
-        log.info("Received HeroesInfo: {}", heroesInfo);
-        // Логіка обробки даних
-        GameStats gameStats = gameStatsService.getGameStats(heroesInfo);
-        log.info("Returning GameStats: {}", gameStats);
-        return gameStats; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
+        try {
+            log.info("Received HeroesInfo: {}", heroesInfo);
+            // Логіка обробки даних
+            GameStats gameStats = gameStatsService.getGameStats(heroesInfo);
+            log.info("Returning GameStats: {}", gameStats);
+            return gameStats; // Цей об'єкт буде відправлений у *reply queue* як відповідь.
+        } catch (Exception e) {
+            log.error(e);
+            return null;
+        }
     }
 }

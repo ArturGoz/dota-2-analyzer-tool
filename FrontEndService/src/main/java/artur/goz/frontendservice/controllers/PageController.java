@@ -27,4 +27,8 @@ public class PageController {
     public String getProfilePage() {
         return "profile";
     }
+    @GetMapping("/results")
+    public String getResultsPage() {
+        return "results";
+    }
 }
