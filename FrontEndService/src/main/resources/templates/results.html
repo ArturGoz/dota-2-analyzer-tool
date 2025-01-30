@@ -8,57 +8,24 @@
 </head>
 <body>
 <h1>Вибір турніру</h1>
-<form action="/match-results/filter" method="get">
+<form onsubmit="event.preventDefault(); submitTournamentName();">
     <label for="tournamentName">Виберіть турнір:</label>
     <select id="tournamentName" name="tournamentName">
         <option value="" disabled selected>Оберіть турнір</option>
+        <!-- Додайте тут опції для турнірів -->
     </select>
     <button type="submit">Показати результати</button>
 </form>
 
 
-
-
-
-
-<!-- Відображення результатів матчів
-<div th:if="${matchResults != null}">
-    <h2 th:text="'Результати для турніру: ' + ${selectedTournament}"></h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Команда 1</th>
-            <th>Команда 2</th>
-            <th>Результат</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="result : ${matchResults}">
-            <td th:text="${result.emptyLineUps}"></td>
-            <td th:text="${result.teamWinnerName}"></td>
-            <td th:text="${result.teamLoserName}"></td>
-            <td>
-                <ul>
-                    <li th:each="hero : ${result.teamHeroesWinner}" th:text="${hero}"></li>
-                </ul>
-            </td>
-
-            <td>
-                <ul>
-                    <li th:each="hero : ${result.teamHeroesLoser}" th:text="${hero}"></li>
-                </ul>
-            </td>
-            <td th:text="${result.teamWinnerWinrate}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>-->
-
-<!-- Повідомлення, якщо немає результатів -->
-<div th:if="${matchResults == null || matchResults.isEmpty()}">
-    <p>Результати для вибраного турніру відсутні.</p>
+<div id="results">
+    <!-- Тут будуть відображатися результати матчів -->
 </div>
 
 <script src="/js/results.js"></script>
 </body>
 </html>
+
+
+
+
