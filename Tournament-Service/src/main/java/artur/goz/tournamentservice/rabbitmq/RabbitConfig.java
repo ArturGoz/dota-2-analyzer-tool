@@ -1,7 +1,6 @@
-package artur.goz.winnercalcutator.rabbitmq;
+package artur.goz.tournamentservice.rabbitmq;
 
 import lombok.Setter;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,11 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 public class RabbitConfig {
-    @Value("${queue.name}")
-    private String queueName;
-
-    @Value("${queue.decrementLimitForUser}")
-    private String queueDecrementLimitForUser;
+    @Value("${queue.stats}")
+    private String gameStatsQueue;
 
     @Value("${spring.rabbitmq.username}")
     private String username;
@@ -31,13 +27,8 @@ public class RabbitConfig {
     private String host;
 
     @Bean
-    public Queue queue(){
-        return new Queue(queueName, false);
-    }
-
-    @Bean
-    public Queue queue2(){
-        return new Queue(queueDecrementLimitForUser, false);
+    public Queue queue1(){
+        return new Queue(gameStatsQueue, false);
     }
 
     @Bean

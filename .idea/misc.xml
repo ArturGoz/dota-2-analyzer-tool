@@ -19,6 +19,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/WinnerCalcutator/pom.xml" />
         <option value="$PROJECT_DIR$/config-service/pom.xml" />
       </set>
     </option>

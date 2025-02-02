@@ -1,7 +1,7 @@
-document.getElementById("updateButton").addEventListener("click", async function() {
+document.getElementById("updateButton").addEventListener("click", async function () {
     const jwtToken = localStorage.getItem("jwtToken"); // Отримуємо JWT з локального сховища або змініть на ваш спосіб збереження
     try {
-        const response = await fetch("/admin/update-data", {
+        const response = await fetch("/stats/update-data", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -15,4 +15,28 @@ document.getElementById("updateButton").addEventListener("click", async function
         console.error("Error:", error);
         alert("Failed to update data");
     }
+});
+
+
+document.getElementById("add-tournament").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const tournamentInfo = {
+        tournament: {
+            name: document.getElementById("tournamentName").value,
+            division: document.getElementById("division").value
+        },
+        tournamentUrl: document.getElementById("tournamentUrl").value
+    };
+
+    fetch("/tournament/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tournamentInfo)
+    })
+        .then(response => response.text())
+        .then(data => alert(data))
+        .catch(error => console.error("Error:", error));
 });

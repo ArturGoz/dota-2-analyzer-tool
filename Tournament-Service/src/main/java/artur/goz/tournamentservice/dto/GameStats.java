@@ -1,4 +1,5 @@
-package artur.goz.winnercalcutator.dto;
+package artur.goz.tournamentservice.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

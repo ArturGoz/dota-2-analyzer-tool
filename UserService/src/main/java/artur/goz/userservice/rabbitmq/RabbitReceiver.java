@@ -41,7 +41,7 @@ public class RabbitReceiver {
     }
     //logining
     @RabbitListener(queues = {"LoginQueue"})
-    public MyUserVO receiveLodinDto(LoginDto loginDto) {
+    public MyUserVO receiveLoginDto(LoginDto loginDto) {
         log.debug("Received LoginDto: {}", loginDto);
         try {
             MyUserVO myUserVO = myUserService.auth(loginDto.getName(),loginDto.getPassword());

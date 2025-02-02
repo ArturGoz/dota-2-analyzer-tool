@@ -17,8 +17,11 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 public class RabbitConfig {
-    @Value("${queue.name}")
-    private String queueName;
+    @Value("${queue.decrementLimitForUser}")
+    private String queueDecrementLimitForUser;
+
+    @Value("${queue.stats}")
+    private String gameStatsQueue;
 
     @Value("${spring.rabbitmq.username}")
     private String username;
@@ -30,8 +33,13 @@ public class RabbitConfig {
     private String host;
 
     @Bean
-    public Queue queue(){
-        return new Queue(queueName, false);
+    public Queue queue1(){
+        return new Queue(queueDecrementLimitForUser, false);
+    }
+
+    @Bean
+    public Queue queue2(){
+        return new Queue(gameStatsQueue, false);
     }
 
 

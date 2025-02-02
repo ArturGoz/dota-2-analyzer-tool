@@ -1,8 +1,10 @@
-package artur.goz.winnercalcutator.controllers;
+package artur.goz.heroesstatsservice.controllers;
 
-import artur.goz.winnercalcutator.dto.GameStats;
-import artur.goz.winnercalcutator.dto.HeroesInfo;
-import artur.goz.winnercalcutator.rabbitmq.MessageSender;
+import artur.goz.heroesstatsservice.dto.GameStats;
+import artur.goz.heroesstatsservice.dto.HeroesInfo;
+import artur.goz.heroesstatsservice.rabbitmq.RabbitManager;
+import artur.goz.heroesstatsservice.services.D2PTService;
+import artur.goz.heroesstatsservice.services.GameStatsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/analyze")
-public class WinrateCalculatorController {
-    private static final Logger logger = LoggerFactory.getLogger(WinrateCalculatorController.class);
+@RequestMapping("/stats")
+public class GameStatsController {
+    private static final Logger logger = LoggerFactory.getLogger(GameStatsController.class);
 
     @Autowired
-    MessageSender messageSender;
+    RabbitManager rabbitManager;
+    @Autowired
+    GameStatsService gameStatsService;
+    @Autowired
+    D2PTService d2PTService;
 
     @PostMapping("/game")
     @ResponseBody
@@ -29,8 +35,8 @@ public class WinrateCalculatorController {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            messageSender.decrementUserLimit(username);
-            GameStats gameStats = messageSender.sendMessage(new HeroesInfo
+            rabbitManager.decrementUserLimit(username);
+            GameStats gameStats = gameStatsService.getGameStats(new HeroesInfo
                     (
                             Arrays.copyOfRange(allHeroes, 0, 5),
                             Arrays.copyOfRange(allHeroes, 5, 10)
@@ -54,4 +60,18 @@ public class WinrateCalculatorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PostMapping("/update-data")
+    public ResponseEntity<String> updateData(@RequestHeader(value = "X-Roles") String roles){
+        if(!roles.matches("ROLE_ADMIN")){
+            return  ResponseEntity.badRequest().body("Only ADMIN role.");
+        }
+        try {
+            d2PTService.updateHeroStatsData();
+            return ResponseEntity.ok("Successfully updated data");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

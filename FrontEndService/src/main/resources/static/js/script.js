@@ -71,7 +71,7 @@ document.getElementById("check-winrate").addEventListener("click", function () {
     }
 
 
-    fetch('/analyze/game', {
+    fetch('/stats/game', {
         method: 'POST',
         headers: {
             "Authorization": localStorage.getItem("jwtToken"),
