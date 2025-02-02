@@ -1,11 +1,9 @@
-package artur.goz.heroesstatsservice.utilities;
+package artur.goz.heroesstatsservice.services;
 
 
 import artur.goz.heroesstatsservice.dto.GameStats;
 import artur.goz.heroesstatsservice.dto.HeroStats;
 import artur.goz.heroesstatsservice.dto.HeroesInfo;
-import artur.goz.heroesstatsservice.services.HeroMatchUpsService;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

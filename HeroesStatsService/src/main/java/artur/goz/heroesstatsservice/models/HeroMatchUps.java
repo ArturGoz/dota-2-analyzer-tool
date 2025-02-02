@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class HeroMatchUps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +25,9 @@ public class HeroMatchUps {
     private String heroPosition;
     private String enemyHeroPosition;
 
-    public HeroMatchUps() {
-    }
 
-    public HeroMatchUps(Long id,
-                        String heroName,
-                        String enemyHeroName,
-                        Float winrate,
-                        Integer matchCount,
-                        String heroPosition,
-                        String enemyHeroPosition) {
-        this.id = id;
+    public HeroMatchUps(String heroName, String enemyHeroName, Float winrate,
+                        Integer matchCount, String heroPosition, String enemyHeroPosition) {
         this.heroName = heroName;
         this.enemyHeroName = enemyHeroName;
         this.winrate = winrate;

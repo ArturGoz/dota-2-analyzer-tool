@@ -2,7 +2,7 @@ package artur.goz.heroesstatsservice.rabbitmq;
 
 import artur.goz.heroesstatsservice.dto.GameStats;
 import artur.goz.heroesstatsservice.dto.HeroesInfo;
-import artur.goz.heroesstatsservice.utilities.GameStatsService;
+import artur.goz.heroesstatsservice.services.GameStatsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

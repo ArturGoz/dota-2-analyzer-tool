@@ -10,9 +10,8 @@
 <h1>Адміністративна сторінка</h1>
 
 <!-- Форма для оновлення даних -->
-<form th:action="@{/admin/update-data}" method="post">
-    <button type="submit">Оновлення даних</button>
-</form>
+<button id="updateButton">Оновити дані</button>
+
 
 <form id="add-tournament" th:action="@{/admin/add-tour}" th:object="${tournament}" method="post">
     <div>
@@ -32,7 +31,6 @@
     </div>
 </form>
 
-<!-- Відображення результату оновлення -->
-<p th:if="${updateResult}" th:text="'Результат оновлення: ' + ${updateResult}"></p>
+<script src="/js/admin.js"></script>
 </body>
 </html>
