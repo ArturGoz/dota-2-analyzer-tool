@@ -28,11 +28,12 @@ document.getElementById("add-tournament").addEventListener("submit", function (e
         },
         tournamentUrl: document.getElementById("tournamentUrl").value
     };
-
+    const jwtToken = localStorage.getItem("jwtToken"); // Отримуємо JWT з локального сховища або змініть на ваш спосіб збереження
     fetch("/tournament/add", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `${jwtToken}`
         },
         body: JSON.stringify(tournamentInfo)
     })

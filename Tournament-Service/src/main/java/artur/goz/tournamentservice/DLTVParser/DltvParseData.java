@@ -19,6 +19,8 @@ import java.util.List;
 @Component
 public class DltvParseData implements DLTVDocParser{
     private static final Logger log = LogManager.getLogger(DltvParseData.class);
+
+    @Autowired
     private MessageSender messageSender;
 
     @Override
