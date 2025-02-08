@@ -7,20 +7,22 @@ import artur.goz.authservice.dto.RegisterDto;
 import artur.goz.authservice.rabbitmq.MessageSender;
 import lombok.AllArgsConstructor;
 
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
 
 @Service
-@AllArgsConstructor
 public class AuthService {
-
-    @Autowired
     private final JWTGenerator jwtGenerator;
+    private final MessageSender messageSender;
 
     @Autowired
-    MessageSender messageSender;
+    public AuthService(JWTGenerator jwtGenerator, MessageSender messageSender) {
+        this.jwtGenerator = jwtGenerator;
+        this.messageSender = messageSender;
+    }
 
     public JWTResponse login(LoginDto loginDto) {
         //перевірка логину
