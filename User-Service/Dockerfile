@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Відкриваємо порт, на якому працює додаток
-EXPOSE 8000
+EXPOSE 8004
 
 # Додаємо затримку перед запуском додатку
 ENTRYPOINT ["sh", "-c", "echo 'Waiting for 10 seconds...' && sleep 10 && java -jar app.jar"]

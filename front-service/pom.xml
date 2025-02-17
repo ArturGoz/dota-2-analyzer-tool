@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>artur.goz</groupId>
-    <artifactId>FrontEndService</artifactId>
+    <artifactId>front-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>FrontEndService</name>
-    <description>FrontEndService</description>
+    <name>front-service</name>
+    <description>front-service</description>
     <url/>
     <licenses>
         <license/>

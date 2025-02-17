@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>artur.goz</groupId>
-    <artifactId>GameStatsService</artifactId>
+    <artifactId>Heroes-Stats-Service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>HeroesStatsService</name>
     <description>HeroesStatsService</description>
