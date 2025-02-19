@@ -25,8 +25,12 @@ public class GameStatsService {
     public  static  String[] heroPositions = {"pos_1","pos_2","pos_3","pos_4","pos_5"};
     private static final int MIN_MATCHES_REQUIRED = 20;
 
-    @Autowired
     HeroMatchUpsService heroMatchUpsService;
+
+    @Autowired
+    public GameStatsService(HeroMatchUpsService heroMatchUpsService) {
+        this.heroMatchUpsService = heroMatchUpsService;
+    }
 
     public GameStats getGameStats(HeroesInfo heroesInfo) {
         GameStats gameStats = new GameStats();

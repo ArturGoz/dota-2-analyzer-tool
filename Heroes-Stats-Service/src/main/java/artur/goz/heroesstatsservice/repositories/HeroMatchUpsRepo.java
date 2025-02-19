@@ -20,5 +20,7 @@ public interface HeroMatchUpsRepo extends JpaRepository<HeroMatchUps, Long> {
     @Transactional
     @Query(value = "TRUNCATE TABLE hero_match_ups", nativeQuery = true)
     void truncateTable();
+
+    List<HeroMatchUps> findByHeroName(String heroName);
 }
 

@@ -46,7 +46,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     // Виведення помилки у разі проблем із запитом
     const messageDiv = document.getElementById('message');
     messageDiv.style.color = 'red';
-    messageDiv.textContent = 'Error: Unable to connect to the server.';
+    messageDiv.textContent = 'Error: Unable to login';
 }
 });
 

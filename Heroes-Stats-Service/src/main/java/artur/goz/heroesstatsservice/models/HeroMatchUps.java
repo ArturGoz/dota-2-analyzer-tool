@@ -24,6 +24,7 @@ public class HeroMatchUps {
     private Integer matchCount;
     private String heroPosition;
     private String enemyHeroPosition;
+    private Integer updateCount;
 
 
     public HeroMatchUps(String heroName, String enemyHeroName, Float winrate,
@@ -34,6 +35,7 @@ public class HeroMatchUps {
         this.matchCount = matchCount;
         this.heroPosition = heroPosition;
         this.enemyHeroPosition = enemyHeroPosition;
+        this.updateCount = 1;
     }
 
     @Override

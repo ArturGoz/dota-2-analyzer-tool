@@ -5,6 +5,8 @@ import artur.goz.heroesstatsservice.dto.HeroesInfo;
 import artur.goz.heroesstatsservice.rabbitmq.RabbitManager;
 import artur.goz.heroesstatsservice.services.D2PTService;
 import artur.goz.heroesstatsservice.services.GameStatsService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +23,16 @@ import java.util.Map;
 public class GameStatsController {
     private static final Logger logger = LoggerFactory.getLogger(GameStatsController.class);
 
-    @Autowired
     RabbitManager rabbitManager;
-    @Autowired
     GameStatsService gameStatsService;
-    @Autowired
     D2PTService d2PTService;
+
+    @Autowired
+    public GameStatsController(RabbitManager rabbitManager, GameStatsService gameStatsService, D2PTService d2PTService) {
+        this.rabbitManager = rabbitManager;
+        this.gameStatsService = gameStatsService;
+        this.d2PTService = d2PTService;
+    }
 
     @PostMapping("/game")
     @ResponseBody
@@ -68,6 +74,19 @@ public class GameStatsController {
         }
         try {
             d2PTService.updateHeroStatsData();
+            return ResponseEntity.ok("Successfully updated data");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/add-data")
+    public ResponseEntity<String> addData(@RequestHeader(value = "X-Roles") String roles){
+        if(!roles.matches("ROLE_ADMIN")){
+            return  ResponseEntity.badRequest().body("Only ADMIN role.");
+        }
+        try {
+            d2PTService.addHeroStatsData();
             return ResponseEntity.ok("Successfully updated data");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
