@@ -45,9 +45,7 @@ public class DLTVMatchesService {
                 tournamentService.addTournament(tournament);
             }
             logger.info("data is saved successfully");
-        } catch (Exception e) {
-            logger.error("An error occurred while adding matches", e);
-        } finally {
+        }  finally {
             if (driver != null) {
                 driver.quit();
             }

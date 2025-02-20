@@ -52,6 +52,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
                         .build();
 
                 // Оновити exchange з новим запитом
+                log.info("mutated request: {} {}", username, roles);
                 exchange = exchange.mutate().request(mutatedRequest).build();
             }
             return chain.filter(exchange);

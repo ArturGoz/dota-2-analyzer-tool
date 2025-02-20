@@ -20,10 +20,23 @@ public class D2PTHeroesStatsParser {
 
     private static final Logger log = LogManager.getLogger(D2PTHeroesStatsParser.class);
 
-    public static List<HeroMatchUps> parseDoc(Document doc, String heroUrl) {
+    public static List<HeroMatchUps> parseDocuments(List<Document> doc, String hero) {
+            List<HeroMatchUps> heroMatchUps = new ArrayList<>();
+            for (Document document : doc) {
+                try {
+                    heroMatchUps.addAll(parseDoc(document, hero));
+                }
+                 catch (RuntimeException e) {
+                    log.error("{} problems with parsing", String.valueOf(e));
+                }
+            }
+            return heroMatchUps;
+    }
+
+
+    public static List<HeroMatchUps> parseDoc(Document doc, String hero) {
         List<HeroMatchUps> heroMatchUpsList = new ArrayList<>();
 
-        String hero1 = heroNameParser(heroUrl);
         String hero1Position = heroPositionParser(doc);
         Elements rows = rowParser(doc);
 
@@ -34,9 +47,12 @@ public class D2PTHeroesStatsParser {
                 int matchCount = matchCounterParser(row);
                 String hero2Position = enemyHeroPositionParser(row);
                 HeroMatchUps heroMatchUps =
-                        new HeroMatchUps(hero1, hero2, winrate, matchCount, hero1Position , hero2Position);
-                heroMatchUpsList.add(heroMatchUps);
-                log.info(heroMatchUps);
+                        new HeroMatchUps(hero, hero2, winrate, matchCount, hero1Position , hero2Position);
+
+                if(hero1Position != null && hero2Position != null) {
+                    heroMatchUpsList.add(heroMatchUps);
+                    log.info(heroMatchUps);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 log.info("enemy hero error");
@@ -50,6 +66,8 @@ public class D2PTHeroesStatsParser {
     }
 
     private static String getPosition(Element roleElement) {
+        if (roleElement == null)
+            return null;
         String src = roleElement.select("img").attr("src");
         return src.substring(src.lastIndexOf("/") + 1, src.lastIndexOf("."));
     }
@@ -79,12 +97,5 @@ public class D2PTHeroesStatsParser {
 
     private static String heroPositionParser(Document doc) {
         return getPosition(doc.select("div.mt-6.flex.gap-2 > div.d-box-1.p-2.px-4.flex.gap-1.items-center").first());
-    }
-
-    private static String heroNameParser(String heroUrl) {
-        String[] parts = heroUrl.split("/");
-        String heroName = parts[parts.length - 1];
-        System.out.println(heroName);
-        return heroName;
     }
 }

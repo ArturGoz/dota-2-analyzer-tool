@@ -13,14 +13,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.List;
+import java.util.*;
 
 import static artur.goz.heroesstatsservice.D2PTParser.Heroes.dota2Heroes;
 
@@ -49,19 +45,30 @@ public class D2PTService {
 
     private void processHeroStatsData(boolean isUpdate) {
         WebDriver driver = webDriver();
+        HashMap<String, List<Document>> heroesMap = new HashMap<>();
+
+        fillHeroMatchUpsMap(driver, heroesMap);
+        HashMap<String, List<HeroMatchUps>> parsedHeroesMap = parseData(heroesMap);
+        saveOrAddParsedHeroesData(isUpdate,parsedHeroesMap);
+    }
+
+    private void fillHeroMatchUpsMap(WebDriver driver, HashMap<String, List<Document>> heroesMap) {
         for (String hero : dota2Heroes) {
             String finalUrl = BASE_URL + hero;
             driver.get(finalUrl);
-
             try {
-                waitForPageLoad(driver);
+                waitForPageLoad();
                 List<WebElement> buttons = driver.findElements(By.cssSelector(".rounded-t-md"));
 
-                for (int i = 0; i < Math.min(5, buttons.size()); i++) {  // Corrected index to start at 0
+                List<Document> documentList = new ArrayList<>();
+                heroesMap.put(hero, documentList);
+                for (int i = 1; i <= Math.min(5, buttons.size() - 1); i++) {
+                    waitForTableLoad();
                     buttons.get(i).click();
-                    parseAndSaveHeroData(finalUrl, isUpdate, driver);
-                }
 
+                    Document doc = Jsoup.parse(Objects.requireNonNull(driver.getPageSource()));
+                    documentList.add(doc);
+                }
             } catch (NoSuchElementException e) {
                 log.error("Element not found for hero: {}", hero, e);
             } catch (Exception e) {
@@ -70,29 +77,57 @@ public class D2PTService {
         }
     }
 
-    private void parseAndSaveHeroData(String url, boolean isUpdate, WebDriver driver) {
-        try {
-            waitForPageLoad(driver);
-            Document doc = Jsoup.parse(driver.getPageSource());
-            List<HeroMatchUps> heroMatchUpsList = D2PTHeroesStatsParser.parseDoc(doc, url);
-            if (isUpdate) {
-                heroMatchUpsService.updateHeroMatchUpsList(heroMatchUpsList);
-            } else {
-                heroMatchUpsService.addHeroMatchUps(heroMatchUpsList);
-            }
-        } catch (Exception e) {
-            log.warn("Error parsing hero data: {}", e.getMessage());
+    private void saveOrAddParsedHeroesData(boolean isUpdate, HashMap<String, List<HeroMatchUps>> parsedHeroesMap) {
+           if (isUpdate) {
+               for (String hero : parsedHeroesMap.keySet()) {
+                   heroMatchUpsService.saveAllHeroMatchUpsList(parsedHeroesMap.get(hero));
+               }
+           } else {
+               for (String hero : parsedHeroesMap.keySet()) {
+                   heroMatchUpsService.addHeroMatchUps(parsedHeroesMap.get(hero), hero);
+               }
+           }
+    }
+
+    private HashMap<String, List<HeroMatchUps>> parseData(HashMap<String, List<Document>> heroesMap){
+        try{
+            HashMap<String, List<HeroMatchUps>> heroesMapNew = new HashMap<>();
+            heroesMap.keySet().forEach(hero -> {
+                List<HeroMatchUps> heroMatchUpsList = D2PTHeroesStatsParser.parseDocuments(heroesMap.get(hero), hero);
+                heroesMapNew.put(hero, heroMatchUpsList);
+            });
+            return heroesMapNew;
+        } catch (RuntimeException e) {
+            log.error("failed to parse");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
-    private void waitForPageLoad(WebDriver driver) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".rounded-t-md")));
+
+    private void waitForPageLoad() {
+        try {
+            Thread.sleep(3500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    private void waitForTableLoad() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public WebDriver webDriver() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\chromedriver-win64\\chromedriver.exe");
-        ChromeOptions options = new ChromeOptions();
-        return new ChromeDriver(options);
+        try {
+            System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\chromedriver-win64\\chromedriver.exe");
+            ChromeOptions options = new ChromeOptions();
+            return new ChromeDriver(options);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("failed to initialize chrome driver", e);
+        }
     }
 }

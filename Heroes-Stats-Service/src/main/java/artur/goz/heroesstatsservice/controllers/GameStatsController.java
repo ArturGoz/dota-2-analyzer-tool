@@ -35,7 +35,6 @@ public class GameStatsController {
     }
 
     @PostMapping("/game")
-    @ResponseBody
     public ResponseEntity<Map<String, Object>> getWinrate(@RequestBody String[] allHeroes,
                                                           @RequestHeader(value = "X-User-Name") String username) {
         Map<String, Object> response = new HashMap<>();
@@ -69,7 +68,7 @@ public class GameStatsController {
 
     @PostMapping("/update-data")
     public ResponseEntity<String> updateData(@RequestHeader(value = "X-Roles") String roles){
-        if(!roles.matches("ROLE_ADMIN")){
+        if(!roles.contains("ROLE_ADMIN")){
             return  ResponseEntity.badRequest().body("Only ADMIN role.");
         }
         try {
@@ -82,7 +81,8 @@ public class GameStatsController {
 
     @PostMapping("/add-data")
     public ResponseEntity<String> addData(@RequestHeader(value = "X-Roles") String roles){
-        if(!roles.matches("ROLE_ADMIN")){
+        if(!roles.contains("ROLE_ADMIN")){
+            logger.error("Roles is not ADMIN{}", roles);
             return  ResponseEntity.badRequest().body("Only ADMIN role.");
         }
         try {
