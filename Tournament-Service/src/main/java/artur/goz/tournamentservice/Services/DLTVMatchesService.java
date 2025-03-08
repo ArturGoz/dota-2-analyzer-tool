@@ -4,6 +4,7 @@ import artur.goz.tournamentservice.DLTVParser.DLTVDocParser;
 import artur.goz.tournamentservice.DLTVParser.ParseTourDocuments;
 import artur.goz.tournamentservice.models.MatchResults;
 import artur.goz.tournamentservice.models.Tournament;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
@@ -28,7 +29,7 @@ public class DLTVMatchesService {
     public void addMatches(Tournament tournament, String tournamentUrl) {
         logger.info("початок додавання матчів");
         logger.info("настройка драйвера для гугла");
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\chromedriver-win64\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.NONE); // Установлюємо стратегію завантаження
 

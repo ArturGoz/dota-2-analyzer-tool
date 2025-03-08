@@ -3,6 +3,7 @@ package artur.goz.heroesstatsservice.services;
 
 import artur.goz.heroesstatsservice.D2PTParser.D2PTHeroesStatsParser;
 import artur.goz.heroesstatsservice.models.HeroMatchUps;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -123,7 +124,7 @@ public class D2PTService {
 
     public WebDriver webDriver() {
         try {
-            System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\chromedriver-win64\\chromedriver.exe");
+            WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             return new ChromeDriver(options);
         } catch (RuntimeException e) {

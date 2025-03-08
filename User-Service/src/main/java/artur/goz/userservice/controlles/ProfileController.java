@@ -5,22 +5,19 @@ package artur.goz.userservice.controlles;
 import artur.goz.userservice.dto.MyUserVO;
 import artur.goz.userservice.dto.ChangePassword;
 import artur.goz.userservice.models.MyUser;
-import artur.goz.userservice.services.MyUserService;
+import artur.goz.userservice.services.MyUserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/profile")
 @Slf4j
 public class ProfileController {
     @Autowired
-    MyUserService myUserService;
+    MyUserServiceImpl myUserService;
 
     @GetMapping("/getUserInfo")
     public ResponseEntity<MyUserVO> getUserInfo2(

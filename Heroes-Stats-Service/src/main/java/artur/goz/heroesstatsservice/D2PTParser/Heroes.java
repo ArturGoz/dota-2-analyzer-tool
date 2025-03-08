@@ -1,7 +1,7 @@
 package artur.goz.heroesstatsservice.D2PTParser;
 
 public class Heroes {
-/*    final public static String[] dota2Heroes = {
+    final public static String[] dota2Heroes = {
             "Anti-Mage", "Axe", "Bane", "Bloodseeker", "Crystal Maiden",
             "Drow Ranger", "Earthshaker", "Juggernaut", "Mirana", "Morphling",
             "Shadow Fiend", "Phantom Lancer", "Puck", "Pudge", "Razor",
@@ -27,8 +27,8 @@ public class Heroes {
             "Winter Wyvern", "Arc Warden", "Monkey King", "Pangolier", "Dark Willow",
             "Grimstroke", "Mars", "Snapfire", "Void Spirit", "Hoodwink",
             "Dawnbreaker", "Marci", "Primal Beast", "Muerta", "Kez"
-    };*/
-final public static String[] dota2Heroes = {
+    };
+/*final public static String[] dota2Heroes = {
         "Anti-Mage", "Axe"
-};
+};*/
 }

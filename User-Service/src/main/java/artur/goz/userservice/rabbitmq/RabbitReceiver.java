@@ -1,25 +1,21 @@
 package artur.goz.userservice.rabbitmq;
 
-import artur.goz.userservice.dto.LoginDto;
-import artur.goz.userservice.dto.MyUserVO;
-import artur.goz.userservice.dto.RegisterDto;
-import artur.goz.userservice.models.MyUser;
-import artur.goz.userservice.services.MyUserService;
+import artur.goz.userservice.dto.*;
+import artur.goz.userservice.services.MyUserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RabbitReceiver {
     private static final Logger log = LogManager.getLogger(RabbitReceiver.class);
+    private final MyUserServiceImpl myUserService;
 
-    @Autowired
-    private MyUserService myUserService;
 
-    //registering
-    @RabbitListener(queues = {"RegisterQueue"})
+/*    @RabbitListener(queues = {"RegisterQueue"})
     public MyUserVO receiveRegisterDto(RegisterDto registerDto) {
         try {
             log.debug("Received RegisterDto: {}", registerDto);
@@ -38,8 +34,25 @@ public class RabbitReceiver {
             log.error(e);
             return null;
         }
+    }*/
+
+    @RabbitListener(queues = {"RegisterQueue"})
+    public RabbitResponse<MyUserDTO> receiveRegisterDto(RabbitRequest<RegisterDto> rabbitRequest) {
+            log.debug("Received rabbitRequest: {}", rabbitRequest);
+            RegisterDto registerDto = rabbitRequest.getData();
+
+            MyUserVO myUserVO = new MyUserVO();
+            myUserVO.setEmail(registerDto.getEmail());
+            myUserVO.setName(registerDto.getName());
+            myUserVO.setPassword(registerDto.getPassword());
+            myUserVO.setRole("ROLE_USER");
+
+            MyUserDTO newUserDto = myUserService.registerUser(registerDto);
+
+            log.debug("Returning MyUserVO: {}", myUserVO);
+            return RabbitResponse.create(newUserDto,null,true);
     }
-    //logining
+
     @RabbitListener(queues = {"LoginQueue"})
     public MyUserVO receiveLoginDto(LoginDto loginDto) {
         log.debug("Received LoginDto: {}", loginDto);
