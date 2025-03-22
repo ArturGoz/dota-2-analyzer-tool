@@ -1,4 +1,4 @@
-package artur.goz.userservice.exception;
+package artur.goz.authservice.controllers;
 
 public enum StatusCode {
     OK,

@@ -9,6 +9,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +30,10 @@ public class RabbitManager {
 
     public void decrementUserLimit(String username) {
         log.debug("Sending username to decrement limit : ", username);
+
+/*        GameStats gameStats = rabbitTemplate.convertSendAndReceiveAsType(gameStatsQueue, heroesInfo,
+                new ParameterizedTypeReference<GameStats>() {});*/
+
         rabbitTemplate.convertAndSend(queueDecrementLimitForUser,username);
         log.debug("Limit was decremented for user ", username);
     }

@@ -72,5 +72,4 @@ public class RabbitConfig {
         return rabbitTemplate;
     }
 
-
 }

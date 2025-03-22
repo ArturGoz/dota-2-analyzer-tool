@@ -1,18 +1,15 @@
 package artur.goz.userservice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
-import java.util.Set;
 
 @NoArgsConstructor
 @Data
 @Entity
-public class MyUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,9 +30,7 @@ public class MyUser {
     @Size(min = 5, message = "Password must be at least 5 characters long")
     private String password;
 
-    @JsonIgnore
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles;
+    private String roles;
 
     private Integer monthlyLimit; // Поточний ліміт використання кнопки
 

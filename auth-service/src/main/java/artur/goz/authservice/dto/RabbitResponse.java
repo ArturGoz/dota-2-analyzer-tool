@@ -1,10 +1,7 @@
-package artur.goz.userservice.dto;
+package artur.goz.authservice.dto;
 
-import artur.goz.userservice.exception.MyException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Data
 @Slf4j
