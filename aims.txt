@@ -6,3 +6,7 @@
 *6. доробити фронт(скріпти та верстку)
 
 доробити профіль клас
+
+
+
+add remote responses and change html to get this token from responses

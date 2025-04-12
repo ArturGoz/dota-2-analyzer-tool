@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle the response
     if (response.ok) {
     alert("User registered successfully! Redirecting to login page...");
-    window.location.href = "/auth/login"; // Redirect to the login page
+    window.location.href = "/page/getLogin"; // Redirect to the login page
 } else {
     const errorText = await response.text();
     errorMessage.textContent = errorText; // Display the error message

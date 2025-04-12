@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -33,9 +32,9 @@ public class RabbitManager {
         return getDataFromResponse(rabbitResponse);
     }
 
-    public UserDTO doLogin(LoginDto loginDto) {
-        log.info("Sending LoginDto: {}", loginDto);
-        RabbitResponse<UserDTO> rabbitResponse = rabbitTemplate.convertSendAndReceiveAsType(loginQueue, loginDto,
+    public UserDTO doLogin(RabbitRequest<LoginDTO> rabbitRequest) {
+        log.info("Sending LoginDto: {}", rabbitRequest.getData());
+        RabbitResponse<UserDTO> rabbitResponse = rabbitTemplate.convertSendAndReceiveAsType(loginQueue, rabbitRequest,
                 new ParameterizedTypeReference<RabbitResponse<UserDTO>>() {});
         log.info("Received response : {}", rabbitResponse);
         return getDataFromResponse(rabbitResponse);

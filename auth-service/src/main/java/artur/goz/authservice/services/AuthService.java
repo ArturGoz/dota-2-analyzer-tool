@@ -14,8 +14,8 @@ public class AuthService {
     private final JWTGenerator jwtGenerator;
     private final RabbitManager rabbitManager;
 
-    public JWTResponse login(LoginDto loginDto) {
-        UserDTO userDTO = rabbitManager.doLogin(loginDto);
+    public JWTResponse login(LoginDTO loginDto) {
+        UserDTO userDTO = rabbitManager.doLogin(RabbitRequest.createRabbitRequest(loginDto));
         String token = jwtGenerator.generateJWT(userDTO.getName(),userDTO.getRoles());
         return new JWTResponse(token);
     }

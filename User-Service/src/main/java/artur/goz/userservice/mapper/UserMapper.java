@@ -5,6 +5,7 @@ import artur.goz.userservice.dto.UserDTO;
 import artur.goz.userservice.models.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

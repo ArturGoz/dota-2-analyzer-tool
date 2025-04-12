@@ -3,7 +3,6 @@ package artur.goz.authservice.controllers;
 import artur.goz.authservice.dto.*;
 import artur.goz.authservice.services.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<RemoteResponse> loginUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<RemoteResponse> loginUser(@RequestBody LoginDTO loginDto) {
         JWTResponse jwtResponse = authService.login(loginDto);
         RemoteResponse remoteResponse = RemoteResponse.create(
                 true, "User successfully authenticated", List.of(jwtResponse));

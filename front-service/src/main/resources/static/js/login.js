@@ -20,7 +20,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     if (response.ok) {
     // Отримання JWT токена з тіла відповіді
     const jwtResponse = await response.json();
-    const token = jwtResponse.token;
+    const token = jwtResponse.results[0].token;
 
     if (token) {
     // Додавання префіксу Bearer та збереження токена у Local Storage

@@ -9,6 +9,7 @@ import artur.goz.userservice.mapper.UserMapper;
 import artur.goz.userservice.models.User;
 import artur.goz.userservice.repositories.UserRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +17,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-
-
-    private boolean doPasswordMatch(String userPassword, String passwordToMatch) {
-        return passwordEncoder.matches(userPassword, passwordToMatch);
-    }
 
     @Override
     public UserDTO register(UserDTO userDTO) {
@@ -42,8 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO login(LoginDTO loginDTO) {
-        User user = getUserByName(loginDTO.getUsername());
-        if (!doPasswordMatch(user.getPassword(), loginDTO.getPassword())) {
+        log.info("Login attempt {}", loginDTO);
+        User user = getUserByName(loginDTO.getName());
+        if (!passwordEncoder.matches(loginDTO.getPassword(),user.getPassword())) {
             throw new EntityNotFoundException("Wrong password",
                     StatusCode.WRONG_PASSWORD.name()
             );
@@ -64,23 +62,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByName(String name) {
-        return userRepo.findByName(name).orElseThrow(() ->
-                new EntityNotFoundException("User with name " + name + " not found",
-                StatusCode.ENTITY_NOT_FOUND.name()
-                ));
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found",
-                StatusCode.ENTITY_NOT_FOUND.name()));
-    }
-
-    @Override
     public void decrementUserLimit(String name) {
         User user = getUserByName(name);
         user.setMonthlyLimit(user.getMonthlyLimit() - 1);
         userRepo.save(user);
+    }
+
+    private User getUserByName(String name) {
+        return userRepo.findByName(name).orElseThrow(() ->
+                new EntityNotFoundException("User with name " + name + " not found",
+                StatusCode.ENTITY_NOT_FOUND.name()
+                ));
     }
 }

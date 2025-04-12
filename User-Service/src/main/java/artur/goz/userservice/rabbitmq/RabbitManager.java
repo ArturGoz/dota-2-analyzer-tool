@@ -38,7 +38,7 @@ public class RabbitManager {
 
     @RabbitListener(queues = {"decrementLimitForUserQueue"},
             errorHandler = "myCustomErrorHandler")
-    //String -> username
+                                                        //String -> username
     public RabbitResponse<Boolean> decrementLimitHandler(RabbitRequest<String> rabbitRequest) {
         myUserService.decrementUserLimit(rabbitRequest.getData());
         log.debug("decrementing is done for: {}", rabbitRequest.getData());
