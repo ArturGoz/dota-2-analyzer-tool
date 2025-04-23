@@ -79,20 +79,44 @@ document.getElementById("check-winrate").addEventListener("click", function () {
         },
         body: JSON.stringify(heroes)
     })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    if (errorData.error === "Monthly limit exceeded!") {
-                        return {radiantWinrate: "no limit", direWinrate: "no limit", Stats: {}};
-                    }
-                    throw new Error(errorData.error || "Unknown error");
-                });
+        .then(async response => {
+            // Спроба отримати JSON або текст для обробки помилок
+            let errorData;
+            try {
+                errorData = await response.clone().json();
+            } catch {
+                errorData = await response.text();
             }
+
+            if (!response.ok) {
+                // Обробка 401 Unauthorized
+                if (response.status === 401) {
+                    localStorage.removeItem("jwtToken");
+                    window.location.href = "/page/getLogin"; // Перенаправлення на логін
+                    return; // Припинити виконання
+                }
+
+                // Обробка LIMIT_EXCEEDED
+                if (typeof errorData === 'object' && errorData.statusMessage?.includes("LIMIT_EXCEEDED")) {
+                    return { radiantWinrate: "no limit", direWinrate: "no limit", Stats: {} };
+                }
+
+                // Генерувати помилку з текстом або об'єктом
+                throw new Error(
+                    typeof errorData === 'object'
+                        ? errorData.statusMessage || "Unknown error"
+                        : errorData
+                );
+            }
+
             return response.json();
         })
         .then(data => {
-            // Перевірка, чи відповідь містить дані "no limit"
-            if (data.radiantWinrate === "no limit" && data.direWinrate === "no limit") {
+            if (!data) return;
+
+            const statsData = data.results ? data.results[0] : data;
+
+            if (statsData.radiantWinrate === "no limit" && statsData.direWinrate === "no limit") {
                 document.getElementById("radiant-winrate").textContent = "no limit";
                 document.getElementById("dire-winrate").textContent = "no limit";
 
@@ -108,10 +132,9 @@ document.getElementById("check-winrate").addEventListener("click", function () {
                 return;
             }
 
-            // Оновлення winrate для обох команд
-            document.getElementById("radiant-winrate").textContent = data.radiantWinrate + "%";
-            document.getElementById("dire-winrate").textContent = data.direWinrate + "%";
-            document.getElementById("emptyLineUps").textContent = data.emptyLineUps;
+            document.getElementById("radiant-winrate").textContent = statsData.radiantWinrate + "%";
+            document.getElementById("dire-winrate").textContent = statsData.direWinrate + "%";
+            document.getElementById("emptyLineUps").textContent = statsData.emptyLineUps;
 
             // Оновлення статистики для героїв
             for (let j = 1; j <= 5; j++) {
@@ -119,7 +142,7 @@ document.getElementById("check-winrate").addEventListener("click", function () {
                 for (let i = 1; i <= 5; i++) {
                     const enemyHero = heroes[i + 4];
                     const statKey = `${hero1}_vs_${enemyHero}`;
-                    const stats = data.Stats[statKey];
+                    const stats = statsData.Stats[statKey];
 
                     const winrateElementId = `winrate${j}${i}`;
                     const matchesElementId = `matches${j}${i}`;
@@ -141,8 +164,9 @@ document.getElementById("check-winrate").addEventListener("click", function () {
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error:', error.message);
         });
+
 
 });
 

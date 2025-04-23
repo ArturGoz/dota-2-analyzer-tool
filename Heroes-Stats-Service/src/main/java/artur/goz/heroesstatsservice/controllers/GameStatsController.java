@@ -2,11 +2,14 @@ package artur.goz.heroesstatsservice.controllers;
 
 import artur.goz.heroesstatsservice.dto.GameStats;
 import artur.goz.heroesstatsservice.dto.HeroesInfo;
+import artur.goz.heroesstatsservice.dto.RabbitRequest;
+import artur.goz.heroesstatsservice.dto.RemoteResponse;
 import artur.goz.heroesstatsservice.rabbitmq.RabbitManager;
 import artur.goz.heroesstatsservice.services.D2PTService;
 import artur.goz.heroesstatsservice.services.GameStatsService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/stats")
+@Slf4j
 public class GameStatsController {
-    private static final Logger logger = LoggerFactory.getLogger(GameStatsController.class);
-
     RabbitManager rabbitManager;
     GameStatsService gameStatsService;
     D2PTService d2PTService;
@@ -35,12 +38,12 @@ public class GameStatsController {
     }
 
     @PostMapping("/game")
-    public ResponseEntity<Map<String, Object>> getWinrate(@RequestBody String[] allHeroes,
+    public ResponseEntity<RemoteResponse> getWinrate(@RequestBody String[] allHeroes,
                                                           @RequestHeader(value = "X-User-Name") String username) {
-        Map<String, Object> response = new HashMap<>();
-
         try {
-            rabbitManager.decrementUserLimit(username);
+            Map<String, Object> response = new HashMap<>();
+
+            rabbitManager.decrementUserLimit(RabbitRequest.createRabbitRequest(username));
             GameStats gameStats = gameStatsService.getGameStats(new HeroesInfo
                     (
                             Arrays.copyOfRange(allHeroes, 0, 5),
@@ -55,41 +58,47 @@ public class GameStatsController {
             response.put("direWinrate", rightSideWinner);
             response.put("emptyLineUps", gameStats.getNoWinrateForHeroesCounter());
             response.put("Stats", gameStats.getHeroStatsMap());
-            logger.info("Radiant winrate: {}", leftSideWinner);
 
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            logger.error("Error occurred: {}", e.getMessage());
-            response.put("error", "An unexpected error occurred!");
-            response.put("details", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            RemoteResponse remoteResponse = RemoteResponse.create(true,
+                    "User successfully obtained data", List.of(response));
+
+            log.info("Radiant winrate: {}", leftSideWinner);
+            return ResponseEntity.ok(remoteResponse);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            throw  new RuntimeException("Error while retrieving data", e);
         }
     }
 
     @PostMapping("/update-data")
-    public ResponseEntity<String> updateData(@RequestHeader(value = "X-Roles") String roles){
+    public ResponseEntity<RemoteResponse> updateData(@RequestHeader(value = "X-Roles") String roles){
         if(!roles.contains("ROLE_ADMIN")){
-            return  ResponseEntity.badRequest().body("Only ADMIN role.");
+            throw  new RuntimeException("Unauthorized for updating data");
         }
         try {
             d2PTService.updateHeroStatsData();
-            return ResponseEntity.ok("Successfully updated data");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            RemoteResponse remoteResponse = RemoteResponse
+                    .create(true, "Data successfully updated", null);
+            return ResponseEntity.ok(remoteResponse);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            throw  new RuntimeException("Error while updating data", e);
         }
     }
 
     @PostMapping("/add-data")
-    public ResponseEntity<String> addData(@RequestHeader(value = "X-Roles") String roles){
+    public ResponseEntity<RemoteResponse> addData(@RequestHeader(value = "X-Roles") String roles){
         if(!roles.contains("ROLE_ADMIN")){
-            logger.error("Roles is not ADMIN{}", roles);
-            return  ResponseEntity.badRequest().body("Only ADMIN role.");
+            throw  new RuntimeException("Unauthorized for updating data");
         }
         try {
             d2PTService.addHeroStatsData();
-            return ResponseEntity.ok("Successfully updated data");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            RemoteResponse remoteResponse = RemoteResponse
+                    .create(true, "Data successfully added", null);
+            return ResponseEntity.ok(remoteResponse);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            throw  new RuntimeException("Error while adding data", e);
         }
     }
 

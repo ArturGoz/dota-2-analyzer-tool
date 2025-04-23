@@ -10,5 +10,6 @@ public interface UserService {
     UserDTO register(UserDTO userDTO);
     UserDTO login(LoginDTO loginDTO);
     UserDTO updateUser(String name, UserDTO userDTO);
+    UserDTO getUserByName(String name);
     void decrementUserLimit(String name);
 }

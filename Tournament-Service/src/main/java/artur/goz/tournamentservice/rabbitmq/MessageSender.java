@@ -27,10 +27,23 @@ public class MessageSender {
 
     public GameStats getGameStats(HeroesInfo heroesInfo) {
         log.info("Sending HeroesInfo: {}", heroesInfo);
-        GameStats gameStats = rabbitTemplate.convertSendAndReceiveAsType(gameStatsQueue, heroesInfo,
-                new ParameterizedTypeReference<GameStats>() {});
+        RabbitRequest<HeroesInfo> rabbitRequest = RabbitRequest.createRabbitRequest(heroesInfo);
+        RabbitResponse<GameStats> gameStats = rabbitTemplate.convertSendAndReceiveAsType(gameStatsQueue, rabbitRequest,
+                new ParameterizedTypeReference<RabbitResponse<GameStats>>() {});
         log.info("Received response: {}", gameStats);
-        return gameStats;
+        return getDataFromResponse(gameStats);
+    }
+
+    private <T> T getDataFromResponse(RabbitResponse<T> rabbitResponse) {
+        if(rabbitResponse == null) {
+            throw new RuntimeException("RabbitResponse is null");
+        }
+        if (rabbitResponse.getExceptionMessage() != null) {
+            throw new RuntimeException(
+                    rabbitResponse.getExceptionMessage()
+            );
+        }
+        return rabbitResponse.getData();
     }
 
 }

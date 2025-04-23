@@ -1,4 +1,4 @@
-package artur.goz.authservice.dto;
+package artur.goz.userservice.dto;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

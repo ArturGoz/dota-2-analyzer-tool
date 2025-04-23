@@ -1,47 +1,58 @@
 
 package artur.goz.userservice.controlles;
 
+import artur.goz.userservice.dto.RemoteResponse;
+import artur.goz.userservice.dto.UserDTO;
+import artur.goz.userservice.dto.ChangePassword;
+import artur.goz.userservice.exception.EntityNotFoundException;
+import artur.goz.userservice.exception.StatusCode;
 import artur.goz.userservice.models.User;
 import artur.goz.userservice.services.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/profile")
 @Slf4j
+@RequiredArgsConstructor
 public class ProfileController {
-    @Autowired
-    UserServiceImpl myUserService;
+    private final UserServiceImpl myUserService;
+    private final PasswordEncoder passwordEncoder;
 
-/*    @GetMapping("/getUserInfo")
-    public ResponseEntity<MyUserVO> getUserInfo2(
+    @GetMapping("/info")
+    public ResponseEntity<RemoteResponse> profileInfo(
             @RequestHeader(value = "X-User-Name") String username) {
 
-        MyUserVO myUserVO = myUserService.findUserVO(username);
-        myUserVO.setPassword(null);
-        return ResponseEntity.ok(myUserVO);
+        UserDTO myUserDTO = myUserService.getUserByName(username);
+        return ResponseEntity.ok(RemoteResponse.create(true,
+                "User was successfully obtained", List.of(myUserDTO)));
     }
 
 
-    @PatchMapping("/passwordChange")
-    public ResponseEntity<String> getPassword(@RequestBody ChangePassword changePassword,
+    @PatchMapping("/changePassword")
+    public ResponseEntity<RemoteResponse> changePassword(@RequestBody @Valid ChangePassword changePassword,
                               @RequestHeader(value = "X-User-Name", required = false) String username){
 
-        User user = myUserService.getMyUserByName(username)
-                .orElseThrow(() -> new RuntimeException("User not found for changing password"));
+        UserDTO myUserDTO = myUserService.getUserByName(username);
 
-
-        if (changePassword.getNewPassword().length() < 8) {
-            return ResponseEntity.badRequest().body("Новий пароль має бути щонайменше 8 символів!");
+        if (!passwordEncoder.matches(changePassword.getOldPassword(),myUserDTO.getPassword())) {
+            throw new EntityNotFoundException("Wrong password",
+                    StatusCode.WRONG_PASSWORD.name()
+            );
         }
 
-        String encodedNewPassword = myUserService.encodePassword(changePassword.getNewPassword());
-
-        log.info("New password: {}", encodedNewPassword);
-        myUserService.updatePassword(user, encodedNewPassword);
-        return ResponseEntity.ok("Пароль був змінений успішно");
-    }*/
+        String encodedNewPassword = passwordEncoder.encode(changePassword.getNewPassword());
+        myUserDTO.setPassword(encodedNewPassword);
+        myUserService.updateUser(username, myUserDTO);
+        return ResponseEntity.ok(RemoteResponse.create(true,
+                "Password was successfully changed", List.of(encodedNewPassword)));
+    }
 }

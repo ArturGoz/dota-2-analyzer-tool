@@ -4,6 +4,7 @@ import artur.goz.userservice.dto.LoginDTO;
 import artur.goz.userservice.dto.UserDTO;
 import artur.goz.userservice.exception.EntityAlreadyExistsException;
 import artur.goz.userservice.exception.EntityNotFoundException;
+import artur.goz.userservice.exception.LimitException;
 import artur.goz.userservice.exception.StatusCode;
 import artur.goz.userservice.mapper.UserMapper;
 import artur.goz.userservice.models.User;
@@ -12,9 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -32,7 +30,6 @@ public class UserServiceImpl implements UserService {
         }
         User userNew = userMapper.toUser(userDTO);
         userNew.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        //  myUserNew.setRoles(Set.of("ROLE_USER"));
         User newUser = userRepo.save(userNew);
         return userMapper.toUserDTO(newUser);
     }
@@ -40,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO login(LoginDTO loginDTO) {
         log.info("Login attempt {}", loginDTO);
-        User user = getUserByName(loginDTO.getName());
+        User user = extractUserByName(loginDTO.getName());
         if (!passwordEncoder.matches(loginDTO.getPassword(),user.getPassword())) {
             throw new EntityNotFoundException("Wrong password",
                     StatusCode.WRONG_PASSWORD.name()
@@ -51,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(String username, UserDTO userDTO) {
-        User user = getUserByName(username);
+        User user = extractUserByName(username);
         User newUser = userMapper.toUser(userDTO);
         user.setPassword(passwordEncoder.encode(newUser.getPassword()));
         user.setName(newUser.getName());
@@ -62,13 +59,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getUserByName(String name) {
+        User user = extractUserByName(name);
+
+        return userMapper.toUserDTO(user);
+    }
+
+    @Override
     public void decrementUserLimit(String name) {
-        User user = getUserByName(name);
+        User user = extractUserByName(name);
+
+        if(user.getMonthlyLimit() <= 0)
+            throw new LimitException("Limit exceeded", StatusCode.LIMIT_EXCEEDED.name());
+
         user.setMonthlyLimit(user.getMonthlyLimit() - 1);
         userRepo.save(user);
     }
 
-    private User getUserByName(String name) {
+    private User extractUserByName(String name) {
         return userRepo.findByName(name).orElseThrow(() ->
                 new EntityNotFoundException("User with name " + name + " not found",
                 StatusCode.ENTITY_NOT_FOUND.name()

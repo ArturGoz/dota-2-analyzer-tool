@@ -1,4 +1,4 @@
-package artur.goz.authservice.dto;
+package artur.goz.tournamentservice.dto;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -25,5 +25,4 @@ public class RemoteResponse {
         if(!isSuccess) log.error(message);
         else log.info(message);
     }
-
 }

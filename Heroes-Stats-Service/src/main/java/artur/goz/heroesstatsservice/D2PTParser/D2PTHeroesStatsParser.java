@@ -4,6 +4,7 @@ package artur.goz.heroesstatsservice.D2PTParser;
 
 import artur.goz.heroesstatsservice.models.HeroMatchUps;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
@@ -16,10 +17,8 @@ import java.util.List;
 
 @Component
 @Getter
+@Slf4j
 public class D2PTHeroesStatsParser {
-
-    private static final Logger log = LogManager.getLogger(D2PTHeroesStatsParser.class);
-
     public static List<HeroMatchUps> parseDocuments(List<Document> doc, String hero) {
             List<HeroMatchUps> heroMatchUps = new ArrayList<>();
             for (Document document : doc) {
@@ -48,10 +47,10 @@ public class D2PTHeroesStatsParser {
                 String hero2Position = enemyHeroPositionParser(row);
                 HeroMatchUps heroMatchUps =
                         new HeroMatchUps(hero, hero2, winrate, matchCount, hero1Position , hero2Position);
-
+                log.info(String.valueOf(heroMatchUps));
                 if(hero1Position != null && hero2Position != null) {
                     heroMatchUpsList.add(heroMatchUps);
-                    log.info(heroMatchUps);
+                    log.info(String.valueOf(heroMatchUps));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -96,6 +95,23 @@ public class D2PTHeroesStatsParser {
     }
 
     private static String heroPositionParser(Document doc) {
-        return getPosition(doc.select("div.mt-6.flex.gap-2 > div.d-box-1.p-2.px-4.flex.gap-1.items-center").first());
+
+        Element buttonElement = doc.selectFirst(
+                "button[class=\"opacity-100 py-1 relative items-center font-medium "
+                        + "border-t border-l border-r border-solid rounded-t-md "
+                        + "bg-white/20 border-white/20\"]"
+        );
+
+        if (buttonElement == null) {
+            // Якщо кнопки немає — нічого не парсимо
+            return null;
+        }
+
+        // 2) У цьому button шукаємо <img> з точно таким самим атрибутом class
+        Element imgElement = buttonElement.selectFirst(
+                "img[class=\"h-[20px] w-[20px]\"]"
+        );
+
+        return getPosition(imgElement);
     }
 }

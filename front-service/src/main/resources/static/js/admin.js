@@ -9,8 +9,13 @@ document.getElementById("updateButton").addEventListener("click", async function
             }
         });
 
-        const result = await response.text();
-        alert(result);
+        const data = await response.json();
+
+        if (!data.succeeded) {
+            throw new Error(data.statusMessage);
+        }
+        alert(data.statusMessage);
+
     } catch (error) {
         console.error("Error:", error);
         alert("Failed to update data");
@@ -29,8 +34,13 @@ document.getElementById("addButton").addEventListener("click", async function ()
             }
         });
 
-        const result = await response.text();
-        alert(result);
+        const data = await response.json();
+
+        if (!data.succeeded) {
+            throw new Error(data.statusMessage);
+        }
+        alert(data.statusMessage);
+
     } catch (error) {
         console.error("Error:", error);
         alert("Failed to update data");
@@ -38,7 +48,7 @@ document.getElementById("addButton").addEventListener("click", async function ()
 });
 
 
-document.getElementById("add-tournament").addEventListener("submit", function (event) {
+document.getElementById("add-tournament").addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const tournamentInfo = {
@@ -49,15 +59,24 @@ document.getElementById("add-tournament").addEventListener("submit", function (e
         tournamentUrl: document.getElementById("tournamentUrl").value
     };
     const jwtToken = localStorage.getItem("jwtToken"); // Отримуємо JWT з локального сховища або змініть на ваш спосіб збереження
-    fetch("/tournament/add", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `${jwtToken}`
-        },
-        body: JSON.stringify(tournamentInfo)
-    })
-        .then(response => response.text())
-        .then(data => alert(data))
-        .catch(error => console.error("Error:", error));
+    try {
+        const response = await fetch("/tournament/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": jwtToken
+            },
+            body: JSON.stringify(tournamentInfo)
+        });
+
+        const data = await response.json();
+
+        if (!data.succeeded) {
+            throw new Error(data.statusMessage);
+        }
+        alert(data.statusMessage);
+
+    } catch (error) {
+        console.error("Error adding tournament:", error);
+    }
 });

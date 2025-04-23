@@ -2,10 +2,12 @@
 async function fetchTournaments() {
     try {
         const response = await fetch('/tournament/getList');
-        const tournaments = await response.json();
-        populateTournaments(tournaments);
+        const data = await response.json();
+        if (!data.succeeded) {
+            throw new Error(data.statusMessage);
+        } populateTournaments(data.results[0]);
     } catch (error) {
-        console.error('Помилка при завантаженні турнірів:', error);
+        console.error('Error fetching tournaments:', error);
     }
 }
 
@@ -35,10 +37,15 @@ function submitTournamentName() {
     })
         .then(response => response.json())
         .then(data => {
+            if (!data.succeeded) {
+                throw new Error(data.statusMessage);
+            }
+            const tournament = data.results[0];
+
             const resultsContainer = document.getElementById("results");
             resultsContainer.innerHTML = ''; // Очистити попередні результати
 
-            if (data.length > 0) {
+            if (tournament.length > 0) {
                 resultsContainer.innerHTML = `
                         <h2>Результати для турніру: ${tournamentName}</h2>
                         <table>
@@ -54,7 +61,7 @@ function submitTournamentName() {
                                 </tr>
                             </thead>
                             <tbody>
-                                ${data.map(result => `
+                                ${tournament.map(result => `
                                     <tr>
                                         <td>${result.teamWinnerName}</td>
                                         <td>${result.teamLoserName}</td>

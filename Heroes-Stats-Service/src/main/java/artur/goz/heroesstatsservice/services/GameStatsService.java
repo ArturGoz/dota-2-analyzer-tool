@@ -6,6 +6,7 @@ import artur.goz.heroesstatsservice.dto.HeroStats;
 import artur.goz.heroesstatsservice.dto.HeroesInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,19 +19,14 @@ import java.util.Map;
 @Service
 @Getter
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class GameStatsService {
     private static final Logger log = LogManager.getLogger(GameStatsService.class);
     private final Map<String, HeroStats> heroStatsMap = new HashMap<>();
     public  static  String[] heroPositions = {"pos_1","pos_2","pos_3","pos_4","pos_5"};
     private static final int MIN_MATCHES_REQUIRED = 20;
 
-    HeroMatchUpsService heroMatchUpsService;
-
-    @Autowired
-    public GameStatsService(HeroMatchUpsService heroMatchUpsService) {
-        this.heroMatchUpsService = heroMatchUpsService;
-    }
+    private final HeroMatchUpsService heroMatchUpsService;
 
     public GameStats getGameStats(HeroesInfo heroesInfo) {
         GameStats gameStats = new GameStats();
@@ -67,7 +63,7 @@ public class GameStatsService {
         for (int j = 0; j < enemies.length; j++) {
             float winrate = getHeroStats(hero, enemies[j], heroPosition, heroPositions[j]);
             if (winrate == -1) {
-                log.info("{}{} has no 20 matches with {}{}", heroPosition, hero, heroPositions[j], enemies[j]);
+                log.debug("{}{} has no 20 matches with {}{}", heroPosition, hero, heroPositions[j], enemies[j]);
                 validMatches--;
                 gameStats.setNoWinrateForHeroesCounter(gameStats.getNoWinrateForHeroesCounter() + 1);;
             } else {
@@ -76,7 +72,7 @@ public class GameStatsService {
         }
 
         if (validMatches == 0) {
-            log.info("{} {} has no 20 matches with enemy heroes at all", heroPosition, hero);
+            log.debug("{} {} has no 20 matches with enemy heroes at all", heroPosition, hero);
             return -1;
         }
 

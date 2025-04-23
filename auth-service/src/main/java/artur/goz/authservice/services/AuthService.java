@@ -22,6 +22,7 @@ public class AuthService {
 
     public UserDTO register(UserDTO userDTO) {
         userDTO.setRoles("ROLE_USER");
+        //userDTO.setRoles("ROLE_USER,ROLE_ADMIN");
         return rabbitManager.doRegister(RabbitRequest.createRabbitRequest(userDTO));
     }
 

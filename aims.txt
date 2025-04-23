@@ -1,5 +1,3 @@
-1.добавити кастомні exception разом з spring exception handler або подібне
-2.Переробити помилки для rabbitmq, переробити dto and vo(add another line for errors)
 3.додати profiles в параметрах для тестингу та відправлення
 4. тести мокінг з спрінгом і тд
 5. загальний рефакториг
@@ -8,5 +6,3 @@
 доробити профіль клас
 
 
-
-add remote responses and change html to get this token from responses
