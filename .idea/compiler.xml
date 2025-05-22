@@ -8,30 +8,32 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="auth-service" />
-        <module name="GameStatsService" />
-        <module name="UserService" />
-        <module name="WinnerCalcutator" />
+        <module name="front-service" />
+        <module name="Tournament-Service" />
         <module name="api-gateway" />
-        <module name="FrontEndService" />
         <module name="discovery-service" />
+        <module name="Heroes-Stats-Service" />
+        <module name="User-Service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="config-service" target="17" />
       <module name="Eureka-server" target="17" />
+      <module name="WinnerCalcutator" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Eureka-server" options="-parameters" />
-      <module name="FrontEndService" options="-parameters" />
-      <module name="GameStatsService" options="-parameters" />
-      <module name="UserService" options="-parameters" />
+      <module name="Heroes-Stats-Service" options="-parameters" />
+      <module name="Tournament-Service" options="-parameters" />
+      <module name="User-Service" options="-parameters" />
       <module name="WinnerCalcutator" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
       <module name="config-service" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
+      <module name="front-service" options="-parameters" />
     </option>
   </component>
 </project>

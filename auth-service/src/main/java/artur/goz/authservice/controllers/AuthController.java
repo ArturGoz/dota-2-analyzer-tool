@@ -1,46 +1,45 @@
 package artur.goz.authservice.controllers;
 
-import artur.goz.authservice.dto.JWTResponse;
-import artur.goz.authservice.dto.LoginDto;
-import artur.goz.authservice.dto.MyUserVO;
-import artur.goz.authservice.dto.RegisterDto;
+import artur.goz.authservice.dto.*;
 import artur.goz.authservice.services.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
+@Slf4j
 public class AuthController {
-
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<JWTResponse> loginUser(@RequestBody LoginDto loginDto) {
-        try {
+    public ResponseEntity<RemoteResponse> loginUser(@RequestBody LoginDTO loginDto) {
+        try{
             JWTResponse jwtResponse = authService.login(loginDto);
-            return ResponseEntity.ok(jwtResponse);
+            RemoteResponse remoteResponse = RemoteResponse.create(
+                    true, "User successfully authenticated", List.of(jwtResponse));
+            return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
         } catch (RuntimeException e) {
-            String errorMessage = "Login failed: " + e.getMessage();
-            return null;
+            log.error(e.getMessage());
+            throw new RuntimeException("Login failed", e);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<MyUserVO> registerUser(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<RemoteResponse> registerUser(@RequestBody UserDTO userDTO) {
         try {
-            return ResponseEntity.ok(authService.register(registerDto));
+            UserDTO userDTO1 = authService.register(userDTO);
+            RemoteResponse remoteResponse = RemoteResponse.create(
+                    true, "User successfully registered", List.of(userDTO1));
+            return new ResponseEntity<>(remoteResponse, HttpStatus.OK);
         } catch (RuntimeException e) {
-            String errorMessage = "Register failed: " + e.getMessage();
-            return null;
+            log.error(e.getMessage());
+            throw new RuntimeException("Register failed", e);
         }
     }
-
-
-    @PostMapping("/sayHello")
-    public ResponseEntity<String> registerUser() {
-        return ResponseEntity.ok("Hello World!");
-    }
-
 }

@@ -1,38 +1,30 @@
 package artur.goz.authservice.services;
 
-import artur.goz.authservice.dto.JWTResponse;
-import artur.goz.authservice.dto.LoginDto;
-import artur.goz.authservice.dto.MyUserVO;
-import artur.goz.authservice.dto.RegisterDto;
-import artur.goz.authservice.rabbitmq.MessageSender;
-import lombok.AllArgsConstructor;
+import artur.goz.authservice.dto.*;
+import artur.goz.authservice.rabbitmq.RabbitManager;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
-
-    @Autowired
     private final JWTGenerator jwtGenerator;
+    private final RabbitManager rabbitManager;
 
-    @Autowired
-    MessageSender messageSender;
-
-    public JWTResponse login(LoginDto loginDto) {
-        //перевірка логину
-
-        MyUserVO myUserVO = messageSender.sendLogin(loginDto);
-        String token = jwtGenerator.generateJWT(myUserVO.getName(),myUserVO.getRole());
+    public JWTResponse login(LoginDTO loginDto) {
+        UserDTO userDTO = rabbitManager.doLogin(RabbitRequest.createRabbitRequest(loginDto));
+        String token = jwtGenerator.generateJWT(userDTO.getName(),userDTO.getRoles());
         return new JWTResponse(token);
     }
 
-    public MyUserVO register(RegisterDto registerDto) {
-        MyUserVO myUserVO = messageSender.sendRegister(registerDto);
-        return myUserVO;
+    public UserDTO register(UserDTO userDTO) {
+        userDTO.setRoles("ROLE_USER");
+        //userDTO.setRoles("ROLE_USER,ROLE_ADMIN");
+        return rabbitManager.doRegister(RabbitRequest.createRabbitRequest(userDTO));
     }
+
 }
 // add user to check correct roles

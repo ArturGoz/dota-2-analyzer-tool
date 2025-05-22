@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результати матчів</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
+</head>
+<body>
+<h1>Вибір турніру</h1>
+<form onsubmit="event.preventDefault(); submitTournamentName();">
+    <label for="tournamentName">Виберіть турнір:</label>
+    <select id="tournamentName" name="tournamentName">
+        <option value="" disabled selected>Оберіть турнір</option>
+        <!-- Додайте тут опції для турнірів -->
+    </select>
+    <button type="submit">Показати результати</button>
+</form>
+
+
+<div id="results">
+    <!-- Тут будуть відображатися результати матчів -->
+</div>
+
+<script src="/js/results.js"></script>
+</body>
+</html>
+
+
+
+

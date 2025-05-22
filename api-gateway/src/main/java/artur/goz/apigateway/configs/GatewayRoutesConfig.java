@@ -31,10 +31,12 @@ public class GatewayRoutesConfig {
                         .uri("lb://FRONT-SERVICE"))
                 .route("auth-service", r -> r.path("/auth/**")
                         .uri("lb://AUTH-SERVICE"))
-                .route("game", r -> r.path("/analyze/**")
-                        .uri("lb://WINNER-CALCULATOR"))
+                .route("game", r -> r.path("/stats/**")
+                        .uri("lb://HEROES-STATS-SERVICE"))
                 .route("user-service", r -> r.path("/profile/**")
                         .uri("lb://USER-SERVICE"))
+                .route("tour-service", r -> r.path("/tournament/**")
+                        .uri("lb://TOURNAMENT-SERVICE"))
                 .build();
     }
 

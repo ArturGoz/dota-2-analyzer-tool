@@ -13,11 +13,16 @@
         <option value="$PROJECT_DIR$/discovery-service/pom.xml" />
         <option value="$PROJECT_DIR$/config-service/pom.xml" />
         <option value="$PROJECT_DIR$/auth-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Tournament-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/front-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Heroes-Stats-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/User-Service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/WinnerCalcutator/pom.xml" />
         <option value="$PROJECT_DIR$/config-service/pom.xml" />
       </set>
     </option>

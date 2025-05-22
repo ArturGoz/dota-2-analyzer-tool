@@ -1,5 +1,6 @@
 package artur.goz.authservice.rabbitmq;
 
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Setter
 @Configuration
+@NoArgsConstructor
 public class RabbitConfig {
     @Value("${queue.login}")
     private String loginQueue;
