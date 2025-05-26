@@ -8,10 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +57,11 @@ public class D2PTService {
             driver.get(finalUrl);
             try {
                 waitForPageLoad();
+
+                // Execute JavaScript to click the button using XPath
+                JavascriptExecutor js = (JavascriptExecutor) driver;
+                js.executeScript("document.evaluate(\"//button[contains(text(), 'Matchups & Synergies')]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();");
+
                 List<WebElement> buttons = driver.findElements(By.cssSelector(".rounded-t-md"));
 
                 List<Document> documentList = new ArrayList<>();

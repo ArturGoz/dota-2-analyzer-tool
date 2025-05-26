@@ -16,11 +16,8 @@ import reactor.core.publisher.Mono;
 @Configuration
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GlobalFilter {
-        @Autowired
-        private JwtValidator jwtValidator;
-
-        @Autowired
-         private RouterValidator validator;
+        private final JwtValidator jwtValidator;
+        private final RouterValidator validator;
 
         @Override
         public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

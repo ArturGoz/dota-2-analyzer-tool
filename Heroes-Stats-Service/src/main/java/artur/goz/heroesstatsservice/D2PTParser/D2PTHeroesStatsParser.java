@@ -32,7 +32,6 @@ public class D2PTHeroesStatsParser {
             return heroMatchUps;
     }
 
-
     public static List<HeroMatchUps> parseDoc(Document doc, String hero) {
         List<HeroMatchUps> heroMatchUpsList = new ArrayList<>();
 
@@ -64,6 +63,15 @@ public class D2PTHeroesStatsParser {
         return heroMatchUpsList;
     }
 
+    private static Elements rowParser(Document doc) {
+        Element matchupTable = doc.select("div.overflow-y-scroll.tbody.h-96").first();
+
+        if (matchupTable == null)
+            throw new RuntimeException("matchupTable is empty");
+
+        return matchupTable.select("div.overflow-y-scroll.tbody.h-96 > div");
+    }
+
     private static String getPosition(Element roleElement) {
         if (roleElement == null)
             return null;
@@ -72,26 +80,29 @@ public class D2PTHeroesStatsParser {
     }
 
     private static int matchCounterParser(Element row) {
-        Element matchCountElement = row.select("div").get(3);
+        Element matchCountElement = row.select("div").get(4);
         String matchCountText = matchCountElement.text().replace(",", "").trim();
-        return matchCountText.isEmpty() ? 0 : Integer.parseInt(matchCountText);
+        int matchCount = matchCountText.isEmpty() ? 0 : Integer.parseInt(matchCountText);
+        log.info("Parsed data count : " + matchCount);
+        return matchCount;
     }
 
     private static float winrateParser(Element row) {
-        return Float.parseFloat(row.select("div").get(2).text().replace("%", ""));
+        float winrate = Float.parseFloat(row.select("div").get(2).text().replace("%", ""));
+        log.info("Parsed data winrate : " + winrate);
+        return winrate;
     }
 
     private static String enemyHeroParser(Element row) {
-        return row.select("div img.recent_icon").attr("alt");
+        String enemyHero = row.select("div img.recent_icon").attr("alt");
+        log.info("Parsed data enemyHero : " + enemyHero);
+        return enemyHero;
     }
 
     private static String enemyHeroPositionParser(Element row) {
-        return getPosition(row.select("div").get(4));
-    }
-
-    private static Elements rowParser(Document doc) {
-        Element matchupTable = doc.select("div.overflow-y-scroll.tbody.h-96").first();
-        return matchupTable.select("div.overflow-y-scroll.tbody.h-96 > div");
+        String enemyHeroPosition = getPosition(row.select("div").get(5));
+        log.info("Parsed data enemyHeroPosition : " + enemyHeroPosition);
+        return enemyHeroPosition;
     }
 
     private static String heroPositionParser(Document doc) {
@@ -111,7 +122,8 @@ public class D2PTHeroesStatsParser {
         Element imgElement = buttonElement.selectFirst(
                 "img[class=\"h-[20px] w-[20px]\"]"
         );
-
-        return getPosition(imgElement);
+        String heroPosition = getPosition(imgElement);
+        log.info("Parsed heroPosition : " + heroPosition);
+        return heroPosition;
     }
 }

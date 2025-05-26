@@ -4,32 +4,53 @@
     <meta charset="UTF-8">
     <title>Адміністративна сторінка</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/basicStyle.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/logReg.css}">
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}">
+    <link th:href="|https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css|" rel="stylesheet">
 </head>
 <body>
-<h1>Адміністративна сторінка</h1>
 
-<!-- Форма для оновлення даних -->
-<button id="updateButton">Оновити дані</button>
-<button id="addButton">Додати дані</button>
+<header>
+    <div class="banner-header">
+        <h1>Адміністративна сторінка</h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/page/getAnalyze"><i class="fas fa-gamepad"></i> Dota 2 Draft Analyses</a></li>
+            <li><a href="/page/getResults"><i class="fas fa-chart-line"></i> Analyses Results</a></li>
+            <li><a href="#"><i class="fas fa-info-circle"></i> How to Use</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contacts</a></li>
+        </ul>
+    </nav>
+</header>
 
-<form id="add-tournament">
-    <div>
-        <label for="tournamentName">Tournament name:</label>
-        <input type="text" id="tournamentName" name="name" required />
+<main>
+    <div class="control-section">
+        <button id="updateButton">Оновити дані</button>
+        <button id="addButton">Додати дані</button>
     </div>
-    <div>
-        <label for="division">Division:</label>
-        <input type="text" id="division" name="division" required />
-    </div>
-    <div>
-        <label for="tournamentUrl">Tournament Url: (https://dltv.org/events/mesa-invitational-2024)</label>
-        <input type="text" id="tournamentUrl" name="tournamentUrl" required />
-    </div>
-    <div>
-        <button type="submit">Add Tournament</button>
-    </div>
-</form>
+
+    <form id="add-tournament" class="control-section">
+        <div class="column">
+            <label for="tournamentName" class="center-label">Tournament name:</label>
+            <input type="text" id="tournamentName" name="name" required />
+        </div>
+        <div class="column">
+            <label for="division" class="center-label">Division:</label>
+            <input type="text" id="division" name="division" required />
+        </div>
+        <div class="column">
+            <label for="tournamentUrl" class="center-label">Tournament Url: (https://dltv.org/events/mesa-invitational-2024)</label>
+            <input type="text" id="tournamentUrl" name="tournamentUrl" required />
+        </div>
+        <div class="column center-label">
+            <button type="submit">Add Tournament</button>
+        </div>
+    </form>
+</main>
+
+<footer>
+    <p>© 2025 Dota Draft Analyzer. Усі права захищені.</p>
+</footer>
 
 <script src="/js/admin.js"></script>
 </body>
